@@ -35,7 +35,9 @@ func handleConnection(stationFrom string, stationTo string) {
 		panic(err)
 	}
 
-	cmd.PrintConnection(connections)
+	// TODO: simple flag for basic lines
+	/* 	cmd.PrintConnection(connections) */
+	cmd.PrintDepartureTable(connections)
 }
 
 func handleSearch() {

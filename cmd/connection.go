@@ -12,7 +12,7 @@ import (
 func PrintConnection(conns []Connection) {
 
 	t := tabby.New()
-	t.AddHeader("Departure", "Arrival", "Duration")
+	t.AddHeader("Departure", "Duration", "Arrival", "Platform")
 
 	for _, conn := range conns {
 		departureTimeInt, _ := strconv.ParseInt(conn.Departure.Time, 10, 64)
@@ -21,9 +21,9 @@ func PrintConnection(conns []Connection) {
 		arrivalTime := UnixToHHMM(arrivalTimeInt)
 		durationInt, _ := strconv.ParseInt(conn.Duration, 10, 32)
 
-		duration := strconv.FormatInt(durationInt/60, 10)
-
-		t.AddLine(departureTime, arrivalTime, duration+"m")
+		duration := strconv.FormatInt(durationInt/60, 10) + "m"
+		track := conn.Departure.Platform
+		t.AddLine(departureTime, duration, arrivalTime, track)
 	}
 
 	t.Print()
