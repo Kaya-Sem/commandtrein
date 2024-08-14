@@ -35,10 +35,7 @@ func handleConnection(stationFrom string, stationTo string) {
 		panic(err)
 	}
 
-	for _, conn := range connections {
-		cmd.PrintConnection(conn)
-	}
-
+	cmd.PrintConnection(connections)
 }
 
 func handleSearch() {

@@ -3,27 +3,30 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/cheynewallace/tabby"
 	"io"
 	"net/http"
 	"strconv"
 )
 
-func PrintConnection(conn Connection) {
-	departureTimeInt, _ := strconv.ParseInt(conn.Departure.Time, 10, 64)
-	arrivalTimeInt, _ := strconv.ParseInt(conn.Arrival.Time, 10, 64)
-	departureTime := UnixToHHMM(departureTimeInt)
-	arrivalTime := UnixToHHMM(arrivalTimeInt)
-	durationInt, _ := strconv.ParseInt(conn.Duration, 10, 32)
+func PrintConnection(conns []Connection) {
 
-	duration := strconv.FormatInt(durationInt/60, 10)
+	t := tabby.New()
+	t.AddHeader("Departure", "Arrival", "Duration")
 
-	fmt.Printf("%s -> %s, departing at %s, arriving at %s (%sm)\n",
-		conn.Departure.Station,
-		conn.Arrival.Station,
-		departureTime,
-		arrivalTime,
-		duration,
-	)
+	for _, conn := range conns {
+		departureTimeInt, _ := strconv.ParseInt(conn.Departure.Time, 10, 64)
+		arrivalTimeInt, _ := strconv.ParseInt(conn.Arrival.Time, 10, 64)
+		departureTime := UnixToHHMM(departureTimeInt)
+		arrivalTime := UnixToHHMM(arrivalTimeInt)
+		durationInt, _ := strconv.ParseInt(conn.Duration, 10, 32)
+
+		duration := strconv.FormatInt(durationInt/60, 10)
+
+		t.AddLine(departureTime, arrivalTime, duration+"m")
+	}
+
+	t.Print()
 }
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
