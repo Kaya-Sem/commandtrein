@@ -5,10 +5,25 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"strconv"
 )
 
 func PrintConnection(conn Connection) {
-	fmt.Println(conn)
+	departureTimeInt, _ := strconv.ParseInt(conn.Departure.Time, 10, 64)
+	arrivalTimeInt, _ := strconv.ParseInt(conn.Arrival.Time, 10, 64)
+	departureTime := UnixToHHMM(departureTimeInt)
+	arrivalTime := UnixToHHMM(arrivalTimeInt)
+	durationInt, _ := strconv.ParseInt(conn.Duration, 10, 32)
+
+	duration := strconv.FormatInt(durationInt/60, 10)
+
+	fmt.Printf("%s -> %s, departing at %s, arriving at %s (%sm)\n",
+		conn.Departure.Station,
+		conn.Arrival.Station,
+		departureTime,
+		arrivalTime,
+		duration,
+	)
 }
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
