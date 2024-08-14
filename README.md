@@ -2,6 +2,8 @@
 
 Commandtrein is a command-line interface (CLI) tool designed to access and display timetables and route information for SNCB (Belgian Railways) directly from your terminal.
 
+See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
+
 ## Features
 - Timetables: retrieve and display the current timetable for any SNCB station.
 - Routes: Get detailed connections and travel times between two SNCB stations.
