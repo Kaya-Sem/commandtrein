@@ -13,39 +13,44 @@ func main() {
 
 	if len(args) == 1 {
 		if args[0] == "search" {
-			stationsJSON := cmd.GetSNCBStationsJSON()
-			stations, err := cmd.ParseStations(stationsJSON)
-			if err != nil {
-				panic(err)
-			}
-
-			for _, station := range stations {
-				fmt.Printf("%s %s\n", station.ID, station.Name)
-			}
+			handleSearch()
 		} else {
 			handleTimetable(args[0])
 		}
 
 	} else if len(args) == 3 {
-		stationFrom := args[0]
-		stationTo := args[2]
-
-		connectionsJSON, err := cmd.GetConnections(stationFrom, stationTo, "", "")
-		if err != nil {
-			panic(err)
-		}
-
-		connections, err := cmd.ParseConnections(connectionsJSON)
-		if err != nil {
-			panic(err)
-		}
-
-		for _, conn := range connections {
-			cmd.PrintConnection(conn)
-		}
-
+		handleConnection(args[0], args[2])
 	}
 
+}
+
+func handleConnection(stationFrom string, stationTo string) {
+	connectionsJSON, err := cmd.GetConnections(stationFrom, stationTo, "", "")
+	if err != nil {
+		panic(err)
+	}
+
+	connections, err := cmd.ParseConnections(connectionsJSON)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, conn := range connections {
+		cmd.PrintConnection(conn)
+	}
+
+}
+
+func handleSearch() {
+	stationsJSON := cmd.GetSNCBStationsJSON()
+	stations, err := cmd.ParseStations(stationsJSON)
+	if err != nil {
+		panic(err)
+	}
+
+	for _, station := range stations {
+		fmt.Printf("%s %s\n", station.ID, station.Name)
+	}
 }
 
 func handleTimetable(stationName string) {
