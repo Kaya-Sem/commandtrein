@@ -40,7 +40,7 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	// Calculate the relative time for the currently selected row
 	selectedRow := m.table.SelectedRow()
 	if selectedRow != nil {
-		departureTime := selectedRow[0] // assuming the departure time is the first column
+		departureTime := selectedRow[0]
 		relativeTime := calculateRelativeTime(departureTime)
 		m.relativeTime = relativeTime
 	} else {
