@@ -15,10 +15,8 @@ func PrintConnection(conns []Connection) {
 	t.AddHeader("Departure", "Duration", "Arrival", "Platform")
 
 	for _, conn := range conns {
-		departureTimeInt, _ := strconv.ParseInt(conn.Departure.Time, 10, 64)
-		arrivalTimeInt, _ := strconv.ParseInt(conn.Arrival.Time, 10, 64)
-		departureTime := UnixToHHMM(departureTimeInt)
-		arrivalTime := UnixToHHMM(arrivalTimeInt)
+		departureTime := UnixToHHMM(conn.Departure.Time)
+		arrivalTime := UnixToHHMM(conn.Arrival.Time)
 		durationInt, _ := strconv.ParseInt(conn.Duration, 10, 32)
 
 		duration := strconv.FormatInt(durationInt/60, 10) + "m"

@@ -1,36 +1,5 @@
 package cmd
 
-import (
-	"fmt"
-	"strconv"
-)
-
-// PrintDeparture prints the departure information, converting the Unix timestamp to a human-readable format
-func PrintDeparture(d timetableDeparture) {
-	// Convert Unix timestamp to seconds
-	time, err := strconv.ParseInt(d.Time, 10, 64)
-	if err != nil {
-		fmt.Printf(`Could not convert string %s`, d.Time)
-	}
-	departureTime := UnixToHHMM(time)
-	if err != nil {
-		fmt.Printf("Error converting time: %v\n", err)
-		return
-	}
-
-	// delay is represented as seconds.
-	delay, _ := strconv.Atoi(d.Delay)
-	delay = delay / 60
-	if delay > 0 {
-		departureTime = fmt.Sprintf("+%s\033[31m+%s\033[0m", departureTime, FormatDelay(delay))
-	}
-
-	fmt.Printf("↳ %s at %s, Platform: %s\n", d.Station, departureTime, d.Platform)
-}
-
-type TimetableEntry interface {
-}
-
 type StationTimetableResponse struct {
 	Version     string      `json:"version"`
 	Timestamp   string      `json:"timestamp"`

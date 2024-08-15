@@ -2,8 +2,10 @@ package main
 
 import (
 	"fmt"
-	"github.com/Command-Transport/commandtrein/cmd"
 	"os"
+
+	"github.com/Command-Transport/commandtrein/cmd"
+	"github.com/charmbracelet/bubbles/table"
 )
 
 const Version = "0.0.0"
@@ -63,7 +65,17 @@ func handleTimetable(stationName string) {
 		fmt.Printf("failed to parse iRail departures JSON: %v", err)
 	}
 
-	for _, departure := range departures {
-		cmd.PrintDeparture(departure)
+	columns := []table.Column{
+		{Title: "", Width: 5},
+		{Title: "Destination", Width: 20},
+		{Title: "Track", Width: 10},
 	}
+
+	var rows []table.Row
+	for _, departure := range departures {
+		row := table.Row{cmd.UnixToHHMM(departure.Time), departure.Station, departure.Platform}
+		rows = append(rows, row)
+	}
+
+	cmd.RenderTable(columns, rows)
 }
