@@ -19,6 +19,7 @@ const (
 	ErrFileExists = 3
 )
 
+// TODO: let users know when a bad response was given by the server
 var StatusCodes = map[int]string{
 	StatusOK:                  "\033[32m200 OK\033[0m",                    // green
 	StatusInternalServerError: "\033[31m500 Internal Server Error\033[0m", // red

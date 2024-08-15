@@ -9,15 +9,8 @@ import (
 	"net/http"
 )
 
-// FIX: this is appearantly a security issue
-
-// when a time is not specified for timetables, we should use the NotTimed URL for better responses from the API.
-const (
-	iRailAPIBaseURL = "https://api.irail.be"
-	allStationsURL  = iRailAPIBaseURL + "/stations/?format=json&lang=nl"
-)
-
 // https://docs.irail.be/#liveboard-liveboard-api-get
+
 func GetSNCBStationTimeTable(stationName string, time string, arrdep string) ([]byte, error) {
 	url := fmt.Sprintf("https://api.irail.be/liveboard/?station=%s&lang=nl&format=json", stationName)
 
@@ -35,7 +28,7 @@ func GetSNCBStationTimeTable(stationName string, time string, arrdep string) ([]
 	return body, nil
 }
 
-// Parse the iRail departures JSON into a slice of Departure structs
+// ParseiRailDepartures handles fetching of timetable departures
 func ParseiRailDepartures(jsonData []byte) ([]timetableDeparture, error) {
 	var response StationTimetableResponse
 	err := json.Unmarshal(jsonData, &response)
@@ -47,7 +40,8 @@ func ParseiRailDepartures(jsonData []byte) ([]timetableDeparture, error) {
 }
 
 func GetSNCBStationsJSON() []byte {
-	req, err := http.NewRequest("GET", allStationsURL, nil)
+	url := "https://api.irail.be/stations/?format=json&lang=nl"
+	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
 		return nil
@@ -72,7 +66,6 @@ func GetSNCBStationsJSON() []byte {
 	return body
 }
 
-// Intermediate struct to match the JSON structure
 type Station struct {
 	ID           string `json:"id"`
 	Name         string `json:"name"`
