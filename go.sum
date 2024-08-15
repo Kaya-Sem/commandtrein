@@ -1,5 +1,3 @@
-github.com/Command-Transport/commandtrein v0.0.0-20240814161618-91a8b5243a8a h1:ZPfL1xF2CvOxDCEq2eZ5wjgWWWf5U+P11gROXb9LJuE=
-github.com/Command-Transport/commandtrein v0.0.0-20240814161618-91a8b5243a8a/go.mod h1:4avNof2zD8PeyBQsqKXEUmpW/c2EmOHWKmALsx/J2l4=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1 h1:HwpRHbFMcZLEVr42D4p7XBqjyuxQH5SMiErDT4WkJ2k=
 github.com/aymanbagabas/go-osc52/v2 v2.0.1/go.mod h1:uYgXzlJ7ZpABp8OJ+exZzJJhRNQ2ASbcXHWsFqH8hp8=
 github.com/charmbracelet/bubbles v0.18.0 h1:PYv1A036luoBGroX6VWjQIE9Syf2Wby2oOl/39KLfy0=
