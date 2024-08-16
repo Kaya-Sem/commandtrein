@@ -113,7 +113,7 @@ func PrintDepartureTable(connections []Connection) {
 		Bold(false)
 	t.SetStyles(s)
 
-	m := tableModel{t, ""}
+	m := model{t, ""}
 	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
