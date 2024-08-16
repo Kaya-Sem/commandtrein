@@ -10,8 +10,6 @@ import (
 	"github.com/charmbracelet/bubbles/table"
 )
 
-const Version = "0.0.0"
-
 func main() {
 	args := cmd.ShiftArgs(os.Args)
 
@@ -83,10 +81,14 @@ func handleTimetable(stationName string) {
 		{Title: "Track", Width: 10},
 	}
 
-	var rows []table.Row
-	for _, departure := range departures {
-		row := table.Row{cmd.UnixToHHMM(departure.Time), departure.Station, departure.Platform}
-		rows = append(rows, row)
+	rows := make([]table.Row, len(departures))
+
+	for i, departure := range departures {
+		rows[i] = table.Row{
+			cmd.UnixToHHMM(departure.Time),
+			departure.Station,
+			departure.Platform,
+		}
 	}
 
 	s.Stop()

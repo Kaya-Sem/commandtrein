@@ -7,34 +7,6 @@ import (
 	"time"
 )
 
-const (
-	StatusOK                  = 200
-	StatusInternalServerError = 500
-)
-
-const (
-	ErrCli        = 1
-	ErrFileRead   = 2
-	ErrUnmarshal  = 5
-	ErrFileExists = 3
-)
-
-// TODO: let users know when a bad response was given by the server
-var StatusCodes = map[int]string{
-	StatusOK:                  "\033[32m200 OK\033[0m",                    // green
-	StatusInternalServerError: "\033[31m500 Internal Server Error\033[0m", // red
-}
-
-func replaceSpacesWithURLCode(input string) string {
-	return strings.ReplaceAll(input, " ", "%20")
-}
-
-func getCurrentTimeHHMM() string {
-	hours, minutes, _ := time.Now().Clock()
-	return fmt.Sprintf("%d%02d", hours, minutes)
-
-}
-
 func normalizeTime(time string) string {
 	time = strings.ReplaceAll(time, " ", "")
 	time = strings.ReplaceAll(time, ":", "")
@@ -67,7 +39,7 @@ func ShiftArgs(args []string) []string {
 	return args[1:]
 }
 
-// used for calucating human readable "from now" time. E.g 'in 20 minutes'
+// CalculateHumanRelativeTime used for calucating human-readable "from now" time. E.g 'in 20 minutes'
 func CalculateHumanRelativeTime(departureTime string) string {
 	now := time.Now()
 
@@ -98,12 +70,13 @@ func CalculateHumanRelativeTime(departureTime string) string {
 			return "1 hour"
 		}
 		return fmt.Sprintf("1 hour %d min", minutes)
-	} else {
-		hours := int(duration.Hours())
-		minutes := int(duration.Minutes()) % 60
-		if minutes == 0 {
-			return fmt.Sprintf("%d hours", hours)
-		}
-		return fmt.Sprintf("%d hours %d min", hours, minutes)
 	}
+
+	hours := int(duration.Hours())
+	minutes := int(duration.Minutes()) % 60
+	if minutes == 0 {
+		return fmt.Sprintf("%d hours", hours)
+	}
+
+	return fmt.Sprintf("%d hours %d min", hours, minutes)
 }

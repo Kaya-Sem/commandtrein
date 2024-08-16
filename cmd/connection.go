@@ -3,29 +3,9 @@ package cmd
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/cheynewallace/tabby"
 	"io"
 	"net/http"
-	"strconv"
 )
-
-func PrintConnection(conns []Connection) {
-
-	t := tabby.New()
-	t.AddHeader("Departure", "Duration", "Arrival", "Platform")
-
-	for _, conn := range conns {
-		departureTime := UnixToHHMM(conn.Departure.Time)
-		arrivalTime := UnixToHHMM(conn.Arrival.Time)
-		durationInt, _ := strconv.ParseInt(conn.Duration, 10, 32)
-
-		duration := strconv.FormatInt(durationInt/60, 10) + "m"
-		track := conn.Departure.Platform
-		t.AddLine(departureTime, duration, arrivalTime, track)
-	}
-
-	t.Print()
-}
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
 func GetConnections(stationFrom string, stationTo string, time string, arrdep string) ([]byte, error) {
@@ -35,7 +15,12 @@ func GetConnections(stationFrom string, stationTo string, time string, arrdep st
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Println(fmt.Errorf("couldn't close response body: %v", err))
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

@@ -29,6 +29,7 @@ This will download and install commandtrein and make it avaible in your `$GOPATH
 If you prefer to build commandtrein from source, follow these steps:
 
 ```bash
+
 git clone https://github.com/Kaya-Sem/commandtrein.git
 cd commandtrein
 go build -o commandtrein
