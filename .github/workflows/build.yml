@@ -1,0 +1,80 @@
+name: Build
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.22.5' # Replace with your Go version
+
+    - name: Install dependencies
+      run: go mod tidy
+
+    - name: Build binaries
+      run: |
+          mkdir -p dist
+          GOOS=linux GOARCH=amd64 go build -o dist/commandtrein-linux
+          GOOS=darwin GOARCH=amd64 go build -o dist/commandtrein-macos
+          GOOS=windows GOARCH=amd64 go build -o dist/commandtrein-windows
+
+    - name: Get Latest Commit Info
+      id: commit_info
+      run: |
+        echo "COMMIT_SHA=$(git rev-parse --short HEAD)" >> $GITHUB_ENV
+        echo "COMMIT_MESSAGE=$(git log -1 --pretty=format:'%s')" >> $GITHUB_ENV
+
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      with:
+        tag_name: ${{ env.COMMIT_SHA }}
+        release_name: Release ${{ env.COMMIT_SHA }}
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Linux Binary
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/commandtrein-linux
+        asset_name: commandlijn
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload macOS Binary
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/commandtrein-macos
+        asset_name: commandtrein
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Upload Windows Binary
+      uses: actions/upload-release-asset@v1
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./dist/commandtrein-windows
+        asset_name: commandtrein
+        asset_content_type: application/octet-stream
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
