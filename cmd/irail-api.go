@@ -40,7 +40,7 @@ func ParseiRailDepartures(jsonData []byte) ([]timetableDeparture, error) {
 }
 
 func GetSNCBStationsJSON() []byte {
-	url := "https://api.irail.be/stations/?format=json&lang=nl"
+	const url string = "https://api.irail.be/stations/?format=json&lang=nl"
 	req, err := http.NewRequest("GET", url, nil)
 	if err != nil {
 		fmt.Println("Error creating request:", err)
