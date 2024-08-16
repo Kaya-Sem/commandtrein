@@ -44,8 +44,6 @@ func handleConnection(stationFrom string, stationTo string) {
 		panic(err)
 	}
 
-	// TODO: simple flag for basic lines
-	/* 	cmd.PrintConnection(connections) */
 	s.Stop()
 	cmd.PrintDepartureTable(connections)
 }
@@ -93,5 +91,5 @@ func handleTimetable(stationName string) {
 
 	s.Stop()
 
-	cmd.RenderTable(columns, rows)
+	cmd.RenderTable(columns, rows, departures)
 }

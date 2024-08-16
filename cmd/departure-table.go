@@ -9,22 +9,58 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+const (
+	BorderColor        = "240" // gray
+	SelectedForeground = "229" // not setting it to yellow will make the text yellow
+	SelectedBackground = "57"  // purple
+	tableHeight        = 6
+)
+
 var baseStyle1 = lipgloss.NewStyle().
 	BorderForeground(lipgloss.Color("9"))
 
 type tableModel struct {
 	table        table.Model
 	relativeTime string
+	showMessage  bool
+	message      string
+	departures   []timetableDeparture
 }
 
 func (m tableModel) Init() tea.Cmd { return nil }
+
+func getDetailedDepartureInfo(d timetableDeparture) string {
+	return fmt.Sprintf(`
+Detailed info:
+Destination: %s
+Track: %s
+Departure Time: %s
+Vehicle: %s
+Occupancy: %s
+`,
+		d.Station,
+		d.Platform,
+		UnixToHHMM(d.Time),
+		d.Vehicle,
+		d.Occupancy,
+	)
+}
 
 func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
-		case "q", "ctrl+c":
+		case "q", "ctrl+c", "esc":
+			return m, tea.Quit
+		case "enter":
+			selectedRow := m.table.SelectedRow()
+			if selectedRow != nil {
+				selectedIndex := m.table.Cursor()
+				selectedDeparture := m.departures[selectedIndex]
+				m.showMessage = true
+				m.message = getDetailedDepartureInfo(selectedDeparture)
+			}
 			return m, tea.Quit
 		}
 	}
@@ -45,6 +81,11 @@ func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 }
 
 func (m tableModel) View() string {
+	if m.showMessage {
+		// Show the message instead of the table if the flag is set
+		return baseStyle1.Render(m.message)
+	}
+
 	// Add the relative time to the view only if there is a selected row
 	if m.relativeTime != "" {
 		return baseStyle1.Render(m.table.View()) + "\n\n" + "Departure in: " + m.relativeTime + "\n"
@@ -52,7 +93,11 @@ func (m tableModel) View() string {
 	return baseStyle1.Render(m.table.View()) + "\n"
 }
 
-func RenderTable(columnItems []table.Column, rowItems []table.Row) {
+func RenderTable(
+	columnItems []table.Column,
+	rowItems []table.Row,
+	departures []timetableDeparture,
+) {
 	fmt.Println()
 
 	columns := columnItems
@@ -62,22 +107,25 @@ func RenderTable(columnItems []table.Column, rowItems []table.Row) {
 		table.WithColumns(columns),
 		table.WithRows(rows),
 		table.WithFocused(true),
-		table.WithHeight(6),
+		table.WithHeight(tableHeight),
 	)
 
 	s := table.DefaultStyles()
-	//	s.Cell.Align(lipgloss.Position(4))
 	s.Header = s.Header.
 		BorderStyle(lipgloss.NormalBorder()).
-		BorderForeground(lipgloss.Color("240")).
+		BorderForeground(lipgloss.Color(BorderColor)).
 		BorderBottom(true).
 		Bold(false)
 	s.Selected = s.Selected.
-		Foreground(lipgloss.Color("229")).
-		Background(lipgloss.Color("57"))
+		Foreground(lipgloss.Color(SelectedForeground)).
+		Background(lipgloss.Color(SelectedBackground))
 	t.SetStyles(s)
 
-	m := tableModel{t, ""}
+	m := tableModel{
+		table:      t,
+		departures: departures, // Store the departures
+	}
+
 	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
