@@ -12,7 +12,7 @@ import (
 const (
 	BorderColor        = "240" // gray
 	SelectedForeground = "229" // not setting it to yellow will make the text yellow
-	SelectedBackground = "57"  // blue
+	SelectedBackground = "57"  // purple
 	tableHeight        = 6
 )
 
