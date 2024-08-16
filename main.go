@@ -2,10 +2,10 @@ package main
 
 import (
 	"fmt"
+	"github.com/Kaya-Sem/commandtrein/cmd"
 	"os"
 	"time"
 
-	"github.com/Command-Transport/commandtrein/cmd"
 	"github.com/briandowns/spinner"
 	"github.com/charmbracelet/bubbles/table"
 )

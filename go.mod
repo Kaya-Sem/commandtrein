@@ -1,4 +1,4 @@
-module github.com/Command-Transport/commandtrein
+module github.com/Kaya-Sem/commandtrein
 
 go 1.22
 
