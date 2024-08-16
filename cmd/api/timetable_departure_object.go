@@ -1,4 +1,4 @@
-package cmd
+package api
 
 type StationTimetableResponse struct {
 	Version     string      `json:"version"`
@@ -18,10 +18,10 @@ type StationInfo struct {
 
 type Departures struct {
 	Number    string               `json:"number"`
-	Departure []timetableDeparture `json:"departure"`
+	Departure []TimetableDeparture `json:"departure"`
 }
 
-type timetableDeparture struct {
+type TimetableDeparture struct {
 	ID                  string       `json:"id"`
 	Station             string       `json:"station"`
 	StationInfo         StationInfo  `json:"stationinfo"`

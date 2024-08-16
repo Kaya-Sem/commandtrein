@@ -3,6 +3,7 @@ package main
 import (
 	"fmt"
 	"github.com/Kaya-Sem/commandtrein/cmd"
+	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	"os"
 	"time"
 
@@ -32,12 +33,12 @@ func handleConnection(stationFrom string, stationTo string) {
 	s.Start()
 	time.Sleep(1 * time.Second)
 
-	connectionsJSON, err := cmd.GetConnections(stationFrom, stationTo, "", "")
+	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, "", "")
 	if err != nil {
 		panic(err)
 	}
 
-	connections, err := cmd.ParseConnections(connectionsJSON)
+	connections, err := api.ParseConnections(connectionsJSON)
 	if err != nil {
 		panic(err)
 	}
@@ -47,8 +48,8 @@ func handleConnection(stationFrom string, stationTo string) {
 }
 
 func handleSearch() {
-	stationsJSON := cmd.GetSNCBStationsJSON()
-	stations, err := cmd.ParseStations(stationsJSON)
+	stationsJSON := api.GetSNCBStationsJSON()
+	stations, err := api.ParseStations(stationsJSON)
 	if err != nil {
 		panic(err)
 	}
@@ -65,12 +66,12 @@ func handleTimetable(stationName string) {
 	s.Start()
 	time.Sleep(1 * time.Second)
 
-	timetableJSON, err := cmd.GetSNCBStationTimeTable(stationName, "", "departure")
+	timetableJSON, err := api.GetSNCBStationTimeTable(stationName, "", "departure")
 	if err != nil {
 		panic(err)
 	}
 
-	departures, err := cmd.ParseiRailDepartures(timetableJSON)
+	departures, err := api.ParseiRailDepartures(timetableJSON)
 	if err != nil {
 		fmt.Printf("failed to parse iRail departures JSON: %v", err)
 	}

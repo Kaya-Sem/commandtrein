@@ -1,4 +1,4 @@
-package cmd
+package api
 
 // https://docs.irail.be/
 
@@ -29,7 +29,7 @@ func GetSNCBStationTimeTable(stationName string, time string, arrdep string) ([]
 }
 
 // ParseiRailDepartures handles fetching of timetable departures
-func ParseiRailDepartures(jsonData []byte) ([]timetableDeparture, error) {
+func ParseiRailDepartures(jsonData []byte) ([]TimetableDeparture, error) {
 	var response StationTimetableResponse
 	err := json.Unmarshal(jsonData, &response)
 	if err != nil {
