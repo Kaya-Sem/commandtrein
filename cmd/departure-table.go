@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	"os"
 
 	"github.com/charmbracelet/bubbles/table"
@@ -24,12 +25,12 @@ type tableModel struct {
 	relativeTime string
 	showMessage  bool
 	message      string
-	departures   []timetableDeparture
+	departures   []api.TimetableDeparture
 }
 
 func (m tableModel) Init() tea.Cmd { return nil }
 
-func getDetailedDepartureInfo(d timetableDeparture) string {
+func getDetailedDepartureInfo(d api.TimetableDeparture) string {
 	return fmt.Sprintf(`
 Detailed info:
 Destination: %s
@@ -80,6 +81,8 @@ func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, cmd
 }
 
+var italicStyle = lipgloss.NewStyle().Italic(true)
+
 func (m tableModel) View() string {
 	if m.showMessage {
 		// Show the message instead of the table if the flag is set
@@ -88,7 +91,7 @@ func (m tableModel) View() string {
 
 	// Add the relative time to the view only if there is a selected row
 	if m.relativeTime != "" {
-		return baseStyle1.Render(m.table.View()) + "\n\n" + "Departure in: " + m.relativeTime + "\n"
+		return baseStyle1.Render(m.table.View()) + "\n\n" + "Departure in: " + italicStyle.Render(m.relativeTime) + "\n"
 	}
 	return baseStyle1.Render(m.table.View()) + "\n"
 }
@@ -96,7 +99,7 @@ func (m tableModel) View() string {
 func RenderTable(
 	columnItems []table.Column,
 	rowItems []table.Row,
-	departures []timetableDeparture,
+	departures []api.TimetableDeparture,
 ) {
 	fmt.Println()
 

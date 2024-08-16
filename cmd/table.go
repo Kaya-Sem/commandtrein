@@ -2,6 +2,7 @@ package cmd
 
 import (
 	"fmt"
+	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	"os"
 	"strconv"
 
@@ -9,9 +10,6 @@ import (
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
 )
-
-var baseStyle = lipgloss.NewStyle().
-	BorderForeground(lipgloss.Color("9"))
 
 type model struct {
 	table        table.Model
@@ -27,10 +25,10 @@ func (m model) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return m, tea.Quit
-			// case "enter":
-			// 	return m, tea.Batch(
-			// 		tea.Printf("Let's go to %s!", m.table.SelectedRow()[0]),
-			// 	)
+		case "enter":
+			return m, tea.Batch(
+				tea.Printf("detailed info here"),
+			)
 		}
 	}
 
@@ -57,7 +55,7 @@ func (m model) View() string {
 	return baseStyle1.Render(m.table.View()) + "\n"
 }
 
-func PrintDepartureTable(connections []Connection) {
+func PrintDepartureTable(connections []api.Connection) {
 	fmt.Println()
 	columns := []table.Column{
 		{Title: "Departure", Width: 10},
