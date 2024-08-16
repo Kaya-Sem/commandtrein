@@ -1,5 +1,7 @@
 # commandtrein
 
+[![Build](https://github.com/Kaya-Sem/commandtrein/actions/workflows/build.yml/badge.svg)](https://github.com/Kaya-Sem/commandtrein/actions/workflows/build.yml)
+
 Commandtrein is a command-line interface (CLI) tool designed to access and display timetables and route information for SNCB (Belgian Railways) directly from your terminal.
 
 See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
