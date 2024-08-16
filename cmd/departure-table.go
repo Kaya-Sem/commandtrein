@@ -26,6 +26,9 @@ func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl+c":
 			return m, tea.Quit
+		case "enter":
+			fmt.Println("\nconnection info...\n")
+			return m, tea.Quit
 		}
 	}
 
@@ -65,6 +68,7 @@ func RenderTable(columnItems []table.Column, rowItems []table.Row) {
 		table.WithHeight(6),
 	)
 
+	// TODO: don't hardcode colors
 	s := table.DefaultStyles()
 	//	s.Cell.Align(lipgloss.Position(4))
 	s.Header = s.Header.
