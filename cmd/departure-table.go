@@ -24,9 +24,27 @@ type tableModel struct {
 	relativeTime string
 	showMessage  bool
 	message      string
+	departures   []timetableDeparture
 }
 
 func (m tableModel) Init() tea.Cmd { return nil }
+
+func getDetailedDepartureInfo(d timetableDeparture) string {
+	return fmt.Sprintf(`
+Detailed info:
+Destination: %s
+Track: %s
+Departure Time: %s
+Vehicle: %s
+Occupancy: %s
+`,
+		d.Station,
+		d.Platform,
+		UnixToHHMM(d.Time),
+		d.Vehicle,
+		d.Occupancy,
+	)
+}
 
 func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
@@ -36,8 +54,13 @@ func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
 		case "enter":
-			m.showMessage = true
-			m.message = "\n\nConnection info...\ntest\ntest\ntest"
+			selectedRow := m.table.SelectedRow()
+			if selectedRow != nil {
+				selectedIndex := m.table.Cursor()
+				selectedDeparture := m.departures[selectedIndex]
+				m.showMessage = true
+				m.message = getDetailedDepartureInfo(selectedDeparture)
+			}
 			return m, tea.Quit
 		}
 	}
@@ -70,7 +93,11 @@ func (m tableModel) View() string {
 	return baseStyle1.Render(m.table.View()) + "\n"
 }
 
-func RenderTable(columnItems []table.Column, rowItems []table.Row) {
+func RenderTable(
+	columnItems []table.Column,
+	rowItems []table.Row,
+	departures []timetableDeparture,
+) {
 	fmt.Println()
 
 	columns := columnItems
@@ -94,7 +121,11 @@ func RenderTable(columnItems []table.Column, rowItems []table.Row) {
 		Background(lipgloss.Color(SelectedBackground))
 	t.SetStyles(s)
 
-	m := tableModel{t, "", false, ""} // Initialize showMessage and message fields
+	m := tableModel{
+		table:      t,
+		departures: departures, // Store the departures
+	}
+
 	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)
