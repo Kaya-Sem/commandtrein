@@ -3,8 +3,10 @@ package main
 import (
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/Command-Transport/commandtrein/cmd"
+	"github.com/briandowns/spinner"
 	"github.com/charmbracelet/bubbles/table"
 )
 
@@ -23,10 +25,15 @@ func main() {
 	} else if len(args) == 3 {
 		handleConnection(args[0], args[2])
 	}
-
 }
 
 func handleConnection(stationFrom string, stationTo string) {
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Prefix = "  "
+	s.Suffix = " fetching connections..."
+	s.Start()
+	time.Sleep(1 * time.Second)
+
 	connectionsJSON, err := cmd.GetConnections(stationFrom, stationTo, "", "")
 	if err != nil {
 		panic(err)
@@ -39,6 +46,7 @@ func handleConnection(stationFrom string, stationTo string) {
 
 	// TODO: simple flag for basic lines
 	/* 	cmd.PrintConnection(connections) */
+	s.Stop()
 	cmd.PrintDepartureTable(connections)
 }
 
@@ -55,6 +63,12 @@ func handleSearch() {
 }
 
 func handleTimetable(stationName string) {
+	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
+	s.Prefix = "  "
+	s.Suffix = " fetching timetable..."
+	s.Start()
+	time.Sleep(1 * time.Second)
+
 	timetableJSON, err := cmd.GetSNCBStationTimeTable(stationName, "", "departure")
 	if err != nil {
 		panic(err)
@@ -76,6 +90,8 @@ func handleTimetable(stationName string) {
 		row := table.Row{cmd.UnixToHHMM(departure.Time), departure.Station, departure.Platform}
 		rows = append(rows, row)
 	}
+
+	s.Stop()
 
 	cmd.RenderTable(columns, rows)
 }

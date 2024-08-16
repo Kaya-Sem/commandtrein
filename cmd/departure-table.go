@@ -32,14 +32,14 @@ func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	m.table, cmd = m.table.Update(msg)
 
 	// Calculate the relative time for the currently selected row
-	// selectedRow := m.table.SelectedRow()
-	// if selectedRow != nil {
-	// 	departureTime := selectedRow[0]
-	// 	relativeTime := CalculateHumanRelativeTime(departureTime)
-	// 	m.relativeTime = relativeTime
-	// } else {
-	// 	m.relativeTime = ""
-	// }
+	selectedRow := m.table.SelectedRow()
+	if selectedRow != nil {
+		departureTime := selectedRow[0]
+		relativeTime := CalculateHumanRelativeTime(departureTime)
+		m.relativeTime = relativeTime
+	} else {
+		m.relativeTime = ""
+	}
 
 	return m, cmd
 }
