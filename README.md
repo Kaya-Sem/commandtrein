@@ -1,5 +1,7 @@
 # commandtrein
 
+[![Build](https://github.com/Kaya-Sem/commandtrein/actions/workflows/build.yml/badge.svg)](https://github.com/Kaya-Sem/commandtrein/actions/workflows/build.yml)
+
 Commandtrein is a command-line interface (CLI) tool designed to access and display timetables and route information for SNCB (Belgian Railways) directly from your terminal.
 
 See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
@@ -8,7 +10,7 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 - Timetables: retrieve and display the current timetable for any SNCB station.
 - Routes: Get detailed connections and travel times between two SNCB stations.
 
-![image](https://github.com/user-attachments/assets/33c21ed4-86ed-4a45-b6f4-7f047c9fd09a)
+![image](https://github.com/user-attachments/assets/4f23cca7-0cc9-4632-a193-b7e280f112bb)
 
 
 ## Installation
@@ -18,7 +20,7 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 To quickly install commandtrein using go, run the following command:
 
 ```bash
-go install github.com/Command-Transport/commandtrein@latest
+go install github.com/Kaya-Sem/commandtrein@latest
 ```
 
 This will download and install commandtrein and make it avaible in your `$GOPATH/bin` directory. Ensure that this directory is included in your system's `PATH` environment variable.
@@ -27,7 +29,8 @@ This will download and install commandtrein and make it avaible in your `$GOPATH
 If you prefer to build commandtrein from source, follow these steps:
 
 ```bash
-git clone https://github.com/Command-Transport/commandtrein.git
+
+git clone https://github.com/Kaya-Sem/commandtrein.git
 cd commandtrein
 go build -o commandtrein
 sudo mv commandtrein /usr/local/bin/
