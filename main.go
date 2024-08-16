@@ -23,7 +23,6 @@ func main() {
 	} else if len(args) == 3 {
 		handleConnection(args[0], args[2])
 	}
-
 }
 
 func handleConnection(stationFrom string, stationTo string) {
