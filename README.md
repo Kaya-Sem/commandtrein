@@ -9,7 +9,7 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 ## Features
 - Timetables: retrieve and display the current timetable for any SNCB station.
 - Routes: Get detailed connections and travel times between two SNCB stations.
-- 
+
 ![image](https://github.com/user-attachments/assets/4f23cca7-0cc9-4632-a193-b7e280f112bb)
 
 
@@ -20,7 +20,7 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 To quickly install commandtrein using go, run the following command:
 
 ```bash
-go install github.com/Command-Transport/commandtrein@latest
+go install github.com/Kaya-Sem/commandtrein@latest
 ```
 
 This will download and install commandtrein and make it avaible in your `$GOPATH/bin` directory. Ensure that this directory is included in your system's `PATH` environment variable.
@@ -29,7 +29,7 @@ This will download and install commandtrein and make it avaible in your `$GOPATH
 If you prefer to build commandtrein from source, follow these steps:
 
 ```bash
-git clone https://github.com/Command-Transport/commandtrein.git
+git clone https://github.com/Kaya-Sem/commandtrein.git
 cd commandtrein
 go build -o commandtrein
 sudo mv commandtrein /usr/local/bin/
