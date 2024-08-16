@@ -70,12 +70,13 @@ func CalculateHumanRelativeTime(departureTime string) string {
 			return "1 hour"
 		}
 		return fmt.Sprintf("1 hour %d min", minutes)
-	} else {
-		hours := int(duration.Hours())
-		minutes := int(duration.Minutes()) % 60
-		if minutes == 0 {
-			return fmt.Sprintf("%d hours", hours)
-		}
-		return fmt.Sprintf("%d hours %d min", hours, minutes)
 	}
+
+	hours := int(duration.Hours())
+	minutes := int(duration.Minutes()) % 60
+	if minutes == 0 {
+		return fmt.Sprintf("%d hours", hours)
+	}
+
+	return fmt.Sprintf("%d hours %d min", hours, minutes)
 }
