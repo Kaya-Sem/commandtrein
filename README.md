@@ -62,6 +62,13 @@ commandtrein Gent-Sint-Pieters to Zingem
 this command will display the avaible connections, including departure and arrival times, duration, and platform information.
 
 
+#### List all SNCB stations
+```bash
+commandtrein search
+```
+
+To filter results, you will have to use tools like grep. Filtering is planned in upcoming releases
+
 
 #### Acknowledgements
 
