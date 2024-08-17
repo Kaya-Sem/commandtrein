@@ -7,8 +7,8 @@ import (
 
 const (
 	BorderColor        = "240" // gray
-	SelectedForeground = "229" // not setting it to yellow will make the text yellow (yellow on purple = white?)
-	SelectedBackground = "57"  // purple
+	SelectedForeground = "15"  // white
+	SelectedBackground = "97"  // mauve
 	tableHeight        = 10
 )
 
