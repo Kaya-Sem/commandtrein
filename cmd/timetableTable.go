@@ -1,8 +1,7 @@
-package table
+package cmd
 
 import (
 	"fmt"
-	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	"os"
 
@@ -11,33 +10,45 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type connectionTableModel struct {
+const (
+	BorderColor        = "240" // gray
+	SelectedForeground = "229" // not setting it to yellow will make the text yellow
+	SelectedBackground = "57"  // purple
+	tableHeight        = 6
+)
+
+var baseStyle1 = lipgloss.NewStyle().
+	BorderForeground(lipgloss.Color("9"))
+
+type tableModel struct {
 	table        table.Model
 	relativeTime string
 	showMessage  bool
 	message      string
-	departures   []api.Connection
+	departures   []api.TimetableDeparture
 }
 
-func (m connectionTableModel) Init() tea.Cmd { return nil }
+func (m tableModel) Init() tea.Cmd { return nil }
 
-func getDetailedConnectionInfo(c api.Connection) string {
+func getDetailedDepartureInfo(d api.TimetableDeparture) string {
 	return fmt.Sprintf(`
 Detailed info:
 Destination: %s
 Track: %s
 Departure Time: %s
 Vehicle: %s
+Occupancy: %s
 `,
-		c.Departure.Station,
-		c.Departure.Platform,
-		cmd.UnixToHHMM(c.Departure.Time),
-		c.Departure.Vehicle,
+		d.Station,
+		d.Platform,
+		UnixToHHMM(d.Time),
+		d.Vehicle,
+		d.Occupancy,
 	)
 }
 
-func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var teaCmd tea.Cmd
+func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -49,13 +60,13 @@ func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 				selectedIndex := m.table.Cursor()
 				selectedDeparture := m.departures[selectedIndex]
 				m.showMessage = true
-				m.message = getDetailedConnectionInfo(selectedDeparture)
+				m.message = getDetailedDepartureInfo(selectedDeparture)
 			}
 			return m, tea.Quit
 		}
 	}
 
-	m.table, teaCmd = m.table.Update(msg)
+	m.table, cmd = m.table.Update(msg)
 
 	// Calculate the relative time for the currently selected row
 	selectedRow := m.table.SelectedRow()
@@ -67,26 +78,28 @@ func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.relativeTime = ""
 	}
 
-	return m, teaCmd
+	return m, cmd
 }
 
-func (m connectionTableModel) View() string {
+var italicStyle = lipgloss.NewStyle().Italic(true)
+
+func (m tableModel) View() string {
 	if m.showMessage {
-		// Show the message instead of the tables if the flag is set
-		return m.message
+		// Show the message instead of the table if the flag is set
+		return baseStyle1.Render(m.message)
 	}
 
 	// Add the relative time to the view only if there is a selected row
 	if m.relativeTime != "" {
-		return m.table.View() + "\n\n" + "Departure in: " + m.relativeTime + "\n"
+		return baseStyle1.Render(m.table.View()) + "\n\n" + "Departure in: " + italicStyle.Render(m.relativeTime) + "\n"
 	}
-	return m.table.View() + "\n"
+	return baseStyle1.Render(m.table.View()) + "\n"
 }
 
-func RenderConnectionTable(
+func RenderTable(
 	columnItems []table.Column,
 	rowItems []table.Row,
-	connections []api.Connection,
+	departures []api.TimetableDeparture,
 ) {
 	fmt.Println()
 
@@ -111,9 +124,9 @@ func RenderConnectionTable(
 		Background(lipgloss.Color(SelectedBackground))
 	t.SetStyles(s)
 
-	m := connectionTableModel{
+	m := tableModel{
 		table:      t,
-		departures: connections, // Store the departures
+		departures: departures, // Store the departures
 	}
 
 	if _, err := tea.NewProgram(m).Run(); err != nil {

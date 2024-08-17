@@ -8,7 +8,6 @@ import (
 	"os"
 	"time"
 
-	"github.com/briandowns/spinner"
 	teaTable "github.com/charmbracelet/bubbles/table"
 )
 
@@ -42,8 +41,34 @@ func handleConnection(stationFrom string, stationTo string) {
 		panic(err)
 	}
 
+	columns := []teaTable.Column{
+		{Title: "Departure", Width: 7},
+		{Title: "", Width: 2},
+		{Title: "Duration", Width: 7},
+		{Title: "Arrival", Width: 7},
+		{Title: "Track", Width: 10},
+	}
+
+	rows := make([]teaTable.Row, len(connections))
+
+	for i, conn := range connections {
+		var delay string
+		if conn.Departure.Delay == "0" {
+			delay = ""
+		} else {
+			delay = cmd.FormatDelay(conn.Departure.Delay)
+		}
+		rows[i] = teaTable.Row{
+			cmd.UnixToHHMM(conn.Departure.Time),
+			delay,
+			conn.Duration,
+			cmd.UnixToHHMM(conn.Arrival.Time),
+			conn.Departure.Platform,
+		}
+	}
+
 	s.Stop()
-	table.RenderConnectionTable(connections)
+	table.RenderConnectionTable(columns, rows, connections)
 
 }
 

@@ -66,7 +66,7 @@ type ConnectionDeparture struct {
 	Vehicle  string `json:"vehicle"`
 	Platform string `json:"platform"`
 	//Stops    []Stop `json:"stops"`
-	//VehicleInfo  VehicleInfo  `json:"vehicleinfo"`
+	VehicleInfo VehicleInfo `json:"vehicleinfo"`
 	//	StationInfo  StationInfo  `json:"stationinfo"`
 	//PlatformInfo PlatformInfo `json:"platforminfo"`
 }
