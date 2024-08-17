@@ -4,14 +4,15 @@ import (
 	"fmt"
 	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
+	table "github.com/Kaya-Sem/commandtrein/cmd/tables"
 	"os"
 	"time"
 
-	"github.com/briandowns/spinner"
-	"github.com/charmbracelet/bubbles/table"
+	teaTable "github.com/charmbracelet/bubbles/table"
 )
 
 func main() {
+	// TODO: allow flags for time and arrdep
 	args := cmd.ShiftArgs(os.Args)
 
 	if len(args) == 1 {
@@ -27,11 +28,8 @@ func main() {
 }
 
 func handleConnection(stationFrom string, stationTo string) {
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Prefix = "  "
-	s.Suffix = " fetching connections..."
+	s := cmd.NewSpinner("  ", " fetching connections...", 1*time.Second)
 	s.Start()
-	time.Sleep(1 * time.Second)
 
 	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, "", "")
 	if err != nil {
@@ -43,8 +41,35 @@ func handleConnection(stationFrom string, stationTo string) {
 		panic(err)
 	}
 
+	columns := []teaTable.Column{
+		{Title: "Departure", Width: 7},
+		{Title: "", Width: 2},
+		{Title: "Duration", Width: 7},
+		{Title: "Arrival", Width: 7},
+		{Title: "Track", Width: 10},
+	}
+
+	rows := make([]teaTable.Row, len(connections))
+
+	for i, conn := range connections {
+		var delay string
+		if conn.Departure.Delay == "0" {
+			delay = ""
+		} else {
+			delay = cmd.FormatDelay(conn.Departure.Delay)
+		}
+		rows[i] = teaTable.Row{
+			cmd.UnixToHHMM(conn.Departure.Time),
+			delay,
+			conn.Duration,
+			cmd.UnixToHHMM(conn.Arrival.Time),
+			conn.Departure.Platform,
+		}
+	}
+
 	s.Stop()
-	cmd.PrintDepartureTable(connections)
+	table.RenderConnectionTable(columns, rows, connections)
+
 }
 
 func handleSearch() {
@@ -60,11 +85,8 @@ func handleSearch() {
 }
 
 func handleTimetable(stationName string) {
-	s := spinner.New(spinner.CharSets[14], 100*time.Millisecond)
-	s.Prefix = "  "
-	s.Suffix = " fetching timetable..."
+	s := cmd.NewSpinner("  ", " fetching timetable...", 1*time.Second)
 	s.Start()
-	time.Sleep(1 * time.Second)
 
 	timetableJSON, err := api.GetSNCBStationTimeTable(stationName, "", "departure")
 	if err != nil {
@@ -76,17 +98,25 @@ func handleTimetable(stationName string) {
 		fmt.Printf("failed to parse iRail departures JSON: %v", err)
 	}
 
-	columns := []table.Column{
+	columns := []teaTable.Column{
 		{Title: "", Width: 5},
+		{Title: "", Width: 4},
 		{Title: "Destination", Width: 20},
 		{Title: "Track", Width: 10},
 	}
 
-	rows := make([]table.Row, len(departures))
+	rows := make([]teaTable.Row, len(departures))
 
 	for i, departure := range departures {
-		rows[i] = table.Row{
+		var delay string
+		if departure.Delay == "0" {
+			delay = ""
+		} else {
+			delay = cmd.FormatDelay(departure.Delay)
+		}
+		rows[i] = teaTable.Row{
 			cmd.UnixToHHMM(departure.Time),
+			delay,
 			departure.Station,
 			departure.Platform,
 		}
@@ -94,5 +124,5 @@ func handleTimetable(stationName string) {
 
 	s.Stop()
 
-	cmd.RenderTable(columns, rows, departures)
+	table.RenderTimetableTable(columns, rows, departures)
 }
