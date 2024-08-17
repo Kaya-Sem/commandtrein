@@ -20,7 +20,7 @@ const (
 var baseStyle1 = lipgloss.NewStyle().
 	BorderForeground(lipgloss.Color("9"))
 
-type tableModel struct {
+type timetableTableModel struct {
 	table        table.Model
 	relativeTime string
 	showMessage  bool
@@ -28,7 +28,7 @@ type tableModel struct {
 	departures   []api.TimetableDeparture
 }
 
-func (m tableModel) Init() tea.Cmd { return nil }
+func (m timetableTableModel) Init() tea.Cmd { return nil }
 
 func getDetailedDepartureInfo(d api.TimetableDeparture) string {
 	return fmt.Sprintf(`
@@ -47,7 +47,7 @@ Occupancy: %s
 	)
 }
 
-func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var cmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -83,7 +83,7 @@ func (m tableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 var italicStyle = lipgloss.NewStyle().Italic(true)
 
-func (m tableModel) View() string {
+func (m timetableTableModel) View() string {
 	if m.showMessage {
 		// Show the message instead of the table if the flag is set
 		return baseStyle1.Render(m.message)
@@ -124,7 +124,7 @@ func RenderTimetableTable(
 		Background(lipgloss.Color(SelectedBackground))
 	t.SetStyles(s)
 
-	m := tableModel{
+	m := timetableTableModel{
 		table:      t,
 		departures: departures, // Store the departures
 	}
