@@ -28,7 +28,7 @@ func main() {
 }
 
 func handleConnection(stationFrom string, stationTo string) {
-	s := cmd.NewSpinner("  ", " fetching connections...", 1*time.Second)
+	s := cmd.NewSpinner(" ", " fetching connections...", 1*time.Second)
 	s.Start()
 
 	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, "", "")
@@ -85,7 +85,7 @@ func handleSearch() {
 }
 
 func handleTimetable(stationName string) {
-	s := cmd.NewSpinner("  ", " fetching timetable...", 1*time.Second)
+	s := cmd.NewSpinner(" ", " fetching timetable...", 1*time.Second)
 	s.Start()
 
 	timetableJSON, err := api.GetSNCBStationTimeTable(stationName, "", "departure")
