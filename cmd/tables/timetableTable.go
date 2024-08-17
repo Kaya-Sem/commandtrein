@@ -64,8 +64,7 @@ func (m *timetableTableModel) updateSelectedDetails() {
 		selectedIndex := m.table.Cursor()
 		selectedDeparture := m.departures[selectedIndex]
 
-		// Calculate the relative time for the selected row
-		departureTime := selectedRow[0]
+		departureTime := selectedRow[0] // TODO: dont hardcode, this is magic num
 		relativeTime := CalculateHumanRelativeTime(departureTime)
 
 		// Update the selected details including the relative time
@@ -92,6 +91,7 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, teaCmd
 }
 
+// TODO: add rounded corners for Bram?
 var detailsBoxStyle = lipgloss.NewStyle().Padding(1) //.Border(lipgloss.NormalBorder())
 
 func (m timetableTableModel) View() string {
