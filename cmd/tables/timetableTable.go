@@ -11,6 +11,24 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+var (
+	lowOccupancyStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("2"))   // green
+	mediumOccupancyStyle = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("214")) // orange
+	highOccupancyStyle   = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("9"))   // red
+
+)
+
+func styleOccupancy(s string) string {
+	if s == "low" {
+		return lowOccupancyStyle.Render(s)
+	}
+	if s == "medium" {
+		return mediumOccupancyStyle.Render(s)
+	}
+
+	return highOccupancyStyle.Render(s)
+}
+
 type timetableTableModel struct {
 	table           table.Model
 	selectedDetails string
@@ -31,7 +49,7 @@ Occupancy: %s
 		d.Platform,
 		cmd.UnixToHHMM(d.Time),
 		d.Vehicle,
-		d.Occupancy,
+		styleOccupancy(d.Occupancy.Name),
 	)
 }
 
@@ -64,7 +82,6 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 	m.table, teaCmd = m.table.Update(msg)
 
-	// Update the selected details whenever the selection changes
 	m.updateSelectedDetails()
 
 	return m, teaCmd
@@ -76,7 +93,6 @@ func (m timetableTableModel) View() string {
 	tableView := m.table.View()
 	detailsView := detailsBoxStyle.Render(m.selectedDetails)
 
-	// Join the table view and the details view horizontally
 	return lipgloss.JoinHorizontal(lipgloss.Top, tableView, detailsView)
 }
 
@@ -110,7 +126,7 @@ func RenderTimetableTable(
 
 	m := timetableTableModel{
 		table:      t,
-		departures: departures, // Store the departures
+		departures: departures,
 	}
 
 	if _, err := tea.NewProgram(m).Run(); err != nil {
