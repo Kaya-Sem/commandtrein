@@ -19,19 +19,16 @@ var (
 )
 
 func styleOccupancy(s string) string {
-	if s == "low" {
+	switch s {
+	case "low":
 		return lowOccupancyStyle.Render(s)
-	}
-	if s == "medium" {
+	case "medium":
 		return mediumOccupancyStyle.Render(s)
-	}
-
-	if s == "high" {
-
+	case "high":
 		return highOccupancyStyle.Render(s)
+	default:
+		return unknownOccupancyStyle.Render(s)
 	}
-
-	return unknownOccupancyStyle.Render(s)
 }
 
 type timetableTableModel struct {
