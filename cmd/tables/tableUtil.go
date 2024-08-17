@@ -9,7 +9,7 @@ const (
 	BorderColor        = "240" // gray
 	SelectedForeground = "229" // not setting it to yellow will make the text yellow (yellow on purple = white?)
 	SelectedBackground = "57"  // purple
-	tableHeight        = 6
+	tableHeight        = 10
 )
 
 // CalculateHumanRelativeTime used for calucating human-readable "from now" time. E.g 'in 20 minutes'
