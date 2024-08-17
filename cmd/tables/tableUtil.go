@@ -2,6 +2,7 @@ package table
 
 import (
 	"fmt"
+	"github.com/charmbracelet/lipgloss"
 	"time"
 )
 
@@ -11,6 +12,26 @@ const (
 	SelectedBackground = "97"  // mauve
 	tableHeight        = 10
 )
+
+var (
+	lowOccupancyStyle     = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("2"))   // green
+	mediumOccupancyStyle  = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("214")) // orange
+	highOccupancyStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("9"))   // red
+	unknownOccupancyStyle = lipgloss.NewStyle().Italic(true).Faint(true).Italic(true)
+)
+
+func styleOccupancy(s string) string {
+	switch s {
+	case "low":
+		return lowOccupancyStyle.Render(s)
+	case "medium":
+		return mediumOccupancyStyle.Render(s)
+	case "high":
+		return highOccupancyStyle.Render(s)
+	default:
+		return unknownOccupancyStyle.Render(s)
+	}
+}
 
 // CalculateHumanRelativeTime used for calucating human-readable "from now" time. E.g 'in 20 minutes'
 func CalculateHumanRelativeTime(departureTime string) string {
