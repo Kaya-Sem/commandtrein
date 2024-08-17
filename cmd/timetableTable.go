@@ -96,7 +96,7 @@ func (m tableModel) View() string {
 	return baseStyle1.Render(m.table.View()) + "\n"
 }
 
-func RenderTable(
+func RenderTimetableTable(
 	columnItems []table.Column,
 	rowItems []table.Row,
 	departures []api.TimetableDeparture,

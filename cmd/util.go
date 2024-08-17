@@ -23,16 +23,27 @@ func UnixToHHMM(unixTime string) string {
 	return t.Format("15:04")
 }
 
-func FormatDelay(minutes int) string {
-	if minutes >= 60 {
-		hours := minutes / 60
-		remainingMinutes := minutes % 60
-		if remainingMinutes > 0 {
-			return strconv.Itoa(hours) + "h " + strconv.Itoa(remainingMinutes) + "m"
-		}
-		return strconv.Itoa(hours) + "h"
+func FormatDelay(minutes string) string {
+	// Convert string to integer
+	min, err := strconv.Atoi(minutes)
+	if err != nil {
+		return minutes // Or handle the error accordingly
 	}
-	return strconv.Itoa(minutes)
+
+	min = min / 60
+
+	// If the delay is 60 minutes or more, convert to hours and minutes
+	if min >= 60 {
+		hours := min / 60
+		remainingMinutes := min % 60
+		if remainingMinutes > 0 {
+			return "+" + strconv.Itoa(hours) + "h " + strconv.Itoa(remainingMinutes) + "m"
+		}
+		return "+" + strconv.Itoa(hours) + "h"
+	}
+
+	// Return minutes as a string
+	return "+" + strconv.Itoa(min) + "m"
 }
 
 func ShiftArgs(args []string) []string {

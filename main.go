@@ -78,6 +78,7 @@ func handleTimetable(stationName string) {
 
 	columns := []table.Column{
 		{Title: "", Width: 5},
+		{Title: "", Width: 4},
 		{Title: "Destination", Width: 20},
 		{Title: "Track", Width: 10},
 	}
@@ -85,8 +86,15 @@ func handleTimetable(stationName string) {
 	rows := make([]table.Row, len(departures))
 
 	for i, departure := range departures {
+		var delay string
+		if departure.Delay == "0" {
+			delay = ""
+		} else {
+			delay = cmd.FormatDelay(departure.Delay)
+		}
 		rows[i] = table.Row{
 			cmd.UnixToHHMM(departure.Time),
+			delay,
 			departure.Station,
 			departure.Platform,
 		}
@@ -94,5 +102,5 @@ func handleTimetable(stationName string) {
 
 	s.Stop()
 
-	cmd.RenderTable(columns, rows, departures)
+	cmd.RenderTimetableTable(columns, rows, departures)
 }
