@@ -12,10 +12,10 @@ import (
 )
 
 var (
-	lowOccupancyStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("2"))   // green
-	mediumOccupancyStyle = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("214")) // orange
-	highOccupancyStyle   = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("9"))   // red
-
+	lowOccupancyStyle     = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("2"))   // green
+	mediumOccupancyStyle  = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("214")) // orange
+	highOccupancyStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("9"))   // red
+	unknownOccupancyStyle = lipgloss.NewStyle().Italic(true).Faint(true).Italic(true)
 )
 
 func styleOccupancy(s string) string {
@@ -26,7 +26,12 @@ func styleOccupancy(s string) string {
 		return mediumOccupancyStyle.Render(s)
 	}
 
-	return highOccupancyStyle.Render(s)
+	if s == "high" {
+
+		return highOccupancyStyle.Render(s)
+	}
+
+	return unknownOccupancyStyle.Render(s)
 }
 
 type timetableTableModel struct {
