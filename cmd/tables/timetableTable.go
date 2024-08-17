@@ -11,31 +11,64 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
+var (
+	lowOccupancyStyle     = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("2"))   // green
+	mediumOccupancyStyle  = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("214")) // orange
+	highOccupancyStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("9"))   // red
+	unknownOccupancyStyle = lipgloss.NewStyle().Italic(true).Faint(true).Italic(true)
+)
+
+func styleOccupancy(s string) string {
+	switch s {
+	case "low":
+		return lowOccupancyStyle.Render(s)
+	case "medium":
+		return mediumOccupancyStyle.Render(s)
+	case "high":
+		return highOccupancyStyle.Render(s)
+	default:
+		return unknownOccupancyStyle.Render(s)
+	}
+}
+
 type timetableTableModel struct {
-	table        table.Model
-	relativeTime string
-	showMessage  bool
-	message      string
-	departures   []api.TimetableDeparture
+	table           table.Model
+	selectedDetails string
+	departures      []api.TimetableDeparture
 }
 
 func (m timetableTableModel) Init() tea.Cmd { return nil }
 
-func getDetailedDepartureInfo(d api.TimetableDeparture) string {
+func getDetailedDepartureInfo(d api.TimetableDeparture, relativeTime string) string {
 	return fmt.Sprintf(`
-Detailed info:
-Destination: %s
+Departure in: %s
 Track: %s
 Departure Time: %s
 Vehicle: %s
 Occupancy: %s
 `,
-		d.Station,
+		relativeTime,
 		d.Platform,
 		cmd.UnixToHHMM(d.Time),
 		d.Vehicle,
-		d.Occupancy,
+		styleOccupancy(d.Occupancy.Name),
 	)
+}
+
+func (m *timetableTableModel) updateSelectedDetails() {
+	selectedRow := m.table.SelectedRow()
+	if selectedRow != nil {
+		selectedIndex := m.table.Cursor()
+		selectedDeparture := m.departures[selectedIndex]
+
+		departureTime := selectedRow[0] // TODO: dont hardcode, this is magic num
+		relativeTime := CalculateHumanRelativeTime(departureTime)
+
+		// Update the selected details including the relative time
+		m.selectedDetails = getDetailedDepartureInfo(selectedDeparture, relativeTime)
+	} else {
+		m.selectedDetails = "No row selected" // Should never really happen
+	}
 }
 
 func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -45,47 +78,24 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		switch msg.String() {
 		case "q", "ctrl+c", "esc":
 			return m, tea.Quit
-		case "enter":
-			selectedRow := m.table.SelectedRow()
-			if selectedRow != nil {
-				selectedIndex := m.table.Cursor()
-				selectedDeparture := m.departures[selectedIndex]
-				m.showMessage = true
-				m.message = getDetailedDepartureInfo(selectedDeparture)
-			}
-			return m, tea.Quit
 		}
 	}
 
 	m.table, teaCmd = m.table.Update(msg)
 
-	// Calculate the relative time for the currently selected row
-	selectedRow := m.table.SelectedRow()
-	if selectedRow != nil {
-		departureTime := selectedRow[0]
-		CalculateHumanRelativeTime(departureTime)
-		relativeTime := CalculateHumanRelativeTime(departureTime)
-		m.relativeTime = relativeTime
-	} else {
-		m.relativeTime = ""
-	}
+	m.updateSelectedDetails()
 
 	return m, teaCmd
 }
 
-var italicStyle = lipgloss.NewStyle().Italic(true)
+// TODO: add rounded corners for Bram?
+var detailsBoxStyle = lipgloss.NewStyle().Padding(1) //.Border(lipgloss.NormalBorder())
 
 func (m timetableTableModel) View() string {
-	if m.showMessage {
-		// Show the message instead of the tables if the flag is set
-		return m.message
-	}
+	tableView := m.table.View()
+	detailsView := detailsBoxStyle.Render(m.selectedDetails)
 
-	// Add the relative time to the view only if there is a selected row
-	if m.relativeTime != "" {
-		return m.table.View() + "\n\n" + "Departure in: " + italicStyle.Render(m.relativeTime) + "\n"
-	}
-	return m.table.View() + "\n"
+	return lipgloss.JoinHorizontal(lipgloss.Top, tableView, detailsView)
 }
 
 func RenderTimetableTable(
@@ -118,7 +128,7 @@ func RenderTimetableTable(
 
 	m := timetableTableModel{
 		table:      t,
-		departures: departures, // Store the departures
+		departures: departures,
 	}
 
 	if _, err := tea.NewProgram(m).Run(); err != nil {
