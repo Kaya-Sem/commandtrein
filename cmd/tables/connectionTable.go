@@ -1,7 +1,8 @@
-package cmd
+package table
 
 import (
 	"fmt"
+	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	"os"
 
@@ -10,17 +11,7 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-const (
-	BorderColor        = "240" // gray
-	SelectedForeground = "229" // not setting it to yellow will make the text yellow
-	SelectedBackground = "57"  // purple
-	tableHeight        = 6
-)
-
-var baseStyle1 = lipgloss.NewStyle().
-	BorderForeground(lipgloss.Color("9"))
-
-type timetableTableModel struct {
+type connectionTableModel struct {
 	table        table.Model
 	relativeTime string
 	showMessage  bool
@@ -28,9 +19,9 @@ type timetableTableModel struct {
 	departures   []api.TimetableDeparture
 }
 
-func (m timetableTableModel) Init() tea.Cmd { return nil }
+func (m connectionTableModel) Init() tea.Cmd { return nil }
 
-func getDetailedDepartureInfo(d api.TimetableDeparture) string {
+func getDetailedConnectionInfo(d api.TimetableDeparture) string {
 	return fmt.Sprintf(`
 Detailed info:
 Destination: %s
@@ -41,14 +32,14 @@ Occupancy: %s
 `,
 		d.Station,
 		d.Platform,
-		UnixToHHMM(d.Time),
+		cmd.UnixToHHMM(d.Time),
 		d.Vehicle,
 		d.Occupancy,
 	)
 }
 
-func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
-	var cmd tea.Cmd
+func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+	var teaCmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
 		switch msg.String() {
@@ -66,7 +57,7 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		}
 	}
 
-	m.table, cmd = m.table.Update(msg)
+	m.table, teaCmd = m.table.Update(msg)
 
 	// Calculate the relative time for the currently selected row
 	selectedRow := m.table.SelectedRow()
@@ -78,25 +69,23 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 		m.relativeTime = ""
 	}
 
-	return m, cmd
+	return m, teaCmd
 }
 
-var italicStyle = lipgloss.NewStyle().Italic(true)
-
-func (m timetableTableModel) View() string {
+func (m connectionTableModel) View() string {
 	if m.showMessage {
-		// Show the message instead of the table if the flag is set
-		return baseStyle1.Render(m.message)
+		// Show the message instead of the tables if the flag is set
+		return m.message
 	}
 
 	// Add the relative time to the view only if there is a selected row
 	if m.relativeTime != "" {
-		return baseStyle1.Render(m.table.View()) + "\n\n" + "Departure in: " + italicStyle.Render(m.relativeTime) + "\n"
+		return m.table.View() + "\n\n" + "Departure in: " + m.relativeTime + "\n"
 	}
-	return baseStyle1.Render(m.table.View()) + "\n"
+	return m.table.View() + "\n"
 }
 
-func RenderTimetableTable(
+func RenderConnectionTable(
 	columnItems []table.Column,
 	rowItems []table.Row,
 	departures []api.TimetableDeparture,

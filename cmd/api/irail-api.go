@@ -18,7 +18,12 @@ func GetSNCBStationTimeTable(stationName string, time string, arrdep string) ([]
 	if err != nil {
 		return nil, err
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Println(fmt.Errorf("couldn't close response body: %v", err))
+		}
+	}(resp.Body)
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
@@ -54,7 +59,12 @@ func GetSNCBStationsJSON() []byte {
 		fmt.Println("Error making request:", err)
 		return nil
 	}
-	defer resp.Body.Close()
+	defer func(Body io.ReadCloser) {
+		err := Body.Close()
+		if err != nil {
+			fmt.Println("Error closing response body:", err)
+		}
+	}(resp.Body)
 
 	// Read the response body
 	body, err := io.ReadAll(resp.Body)

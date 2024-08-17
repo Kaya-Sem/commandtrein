@@ -4,14 +4,16 @@ import (
 	"fmt"
 	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
+	table "github.com/Kaya-Sem/commandtrein/cmd/tables"
 	"os"
 	"time"
 
 	"github.com/briandowns/spinner"
-	"github.com/charmbracelet/bubbles/table"
+	teaTable "github.com/charmbracelet/bubbles/table"
 )
 
 func main() {
+	// TODO: allow flags for time and arrdep
 	args := cmd.ShiftArgs(os.Args)
 
 	if len(args) == 1 {
@@ -44,7 +46,8 @@ func handleConnection(stationFrom string, stationTo string) {
 	}
 
 	s.Stop()
-	cmd.PrintDepartureTable(connections)
+	table.RenderConnectionTable(connections)
+
 }
 
 func handleSearch() {
@@ -76,14 +79,14 @@ func handleTimetable(stationName string) {
 		fmt.Printf("failed to parse iRail departures JSON: %v", err)
 	}
 
-	columns := []table.Column{
+	columns := []teaTable.Column{
 		{Title: "", Width: 5},
 		{Title: "", Width: 4},
 		{Title: "Destination", Width: 20},
 		{Title: "Track", Width: 10},
 	}
 
-	rows := make([]table.Row, len(departures))
+	rows := make([]teaTable.Row, len(departures))
 
 	for i, departure := range departures {
 		var delay string
@@ -92,7 +95,7 @@ func handleTimetable(stationName string) {
 		} else {
 			delay = cmd.FormatDelay(departure.Delay)
 		}
-		rows[i] = table.Row{
+		rows[i] = teaTable.Row{
 			cmd.UnixToHHMM(departure.Time),
 			delay,
 			departure.Station,
@@ -102,5 +105,5 @@ func handleTimetable(stationName string) {
 
 	s.Stop()
 
-	cmd.RenderTimetableTable(columns, rows, departures)
+	table.RenderTimetableTable(columns, rows, departures)
 }
