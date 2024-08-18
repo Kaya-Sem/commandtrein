@@ -14,12 +14,15 @@ import (
 type timetableTableModel struct {
 	table           table.Model
 	selectedDetails string
+	showMessage     bool
+	message         string
 	departures      []api.TimetableDeparture
 }
 
 func (m timetableTableModel) Init() tea.Cmd { return nil }
 
-func getDetailedDepartureInfo(d api.TimetableDeparture, relativeTime string) string {
+func getDetailedDepartureInfo(d api.TimetableDeparture) string {
+	relativeTime := CalculateHumanRelativeTime(d.Time)
 	return fmt.Sprintf(`
 Departure in: %s
 Track: %s
@@ -41,11 +44,8 @@ func (m *timetableTableModel) updateSelectedDetails() {
 		selectedIndex := m.table.Cursor()
 		selectedDeparture := m.departures[selectedIndex]
 
-		departureTime := selectedRow[0] // TODO: dont hardcode, this is magic num
-		relativeTime := CalculateHumanRelativeTime(departureTime)
-
 		// Update the selected details including the relative time
-		m.selectedDetails = getDetailedDepartureInfo(selectedDeparture, relativeTime)
+		m.selectedDetails = getDetailedDepartureInfo(selectedDeparture)
 	} else {
 		m.selectedDetails = "No row selected" // Should never really happen
 	}
@@ -57,6 +57,15 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	case tea.KeyMsg:
 		switch msg.String() {
 		case "q", "ctrl+c", "esc":
+			return m, tea.Quit
+		case "enter":
+			selectedRow := m.table.SelectedRow()
+			if selectedRow != nil {
+				selectedIndex := m.table.Cursor
+				selectedDeparture := m.departures[selectedIndex()]
+				m.showMessage = true
+				m.message = getDetailedDepartureInfo(selectedDeparture)
+			}
 			return m, tea.Quit
 		}
 	}
@@ -72,6 +81,9 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 var detailsBoxStyle = lipgloss.NewStyle().Padding(1) //.Border(lipgloss.NormalBorder())
 
 func (m timetableTableModel) View() string {
+	if m.showMessage {
+		return m.message
+	}
 	tableView := m.table.View()
 	detailsView := detailsBoxStyle.Render(m.selectedDetails)
 

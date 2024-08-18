@@ -12,11 +12,11 @@ import (
 )
 
 type connectionTableModel struct {
-	table        table.Model
-	relativeTime string
-	showMessage  bool
-	message      string
-	departures   []api.Connection
+	table           table.Model
+	selectedDetails string
+	showMessage     bool
+	message         string
+	departures      []api.Connection
 }
 
 func (m connectionTableModel) Init() tea.Cmd { return nil }
@@ -34,6 +34,19 @@ Vehicle: %s
 		cmd.UnixToHHMM(c.Departure.Time),
 		c.Departure.Vehicle,
 	)
+}
+
+func (m *connectionTableModel) updateSelectedDetails() {
+	selectedRow := m.table.SelectedRow()
+	if selectedRow != nil {
+		selectedIndex := m.table.Cursor()
+		selectedConnection := m.departures[selectedIndex]
+
+		// Update the selected details including the relative time
+		m.selectedDetails = getDetailedConnectionInfo(selectedConnection)
+	} else {
+		m.selectedDetails = "No row selected" // Should never really happen
+	}
 }
 
 func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
@@ -56,31 +69,20 @@ func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	}
 
 	m.table, teaCmd = m.table.Update(msg)
-
-	// Calculate the relative time for the currently selected row
-	selectedRow := m.table.SelectedRow()
-	if selectedRow != nil {
-		departureTime := selectedRow[0]
-		relativeTime := CalculateHumanRelativeTime(departureTime)
-		m.relativeTime = relativeTime
-	} else {
-		m.relativeTime = ""
-	}
+	m.updateSelectedDetails()
 
 	return m, teaCmd
 }
 
 func (m connectionTableModel) View() string {
 	if m.showMessage {
-		// Show the message instead of the tables if the flag is set
+		// dump detailed info instead
 		return m.message
 	}
+	tableView := m.table.View()
+	detailsView := detailsBoxStyle.Render(m.selectedDetails)
 
-	// Add the relative time to the view only if there is a selected row
-	if m.relativeTime != "" {
-		return m.table.View() + "\n\n" + "Departure in: " + m.relativeTime + "\n"
-	}
-	return m.table.View() + "\n"
+	return lipgloss.JoinHorizontal(lipgloss.Top, tableView, detailsView)
 }
 
 func RenderConnectionTable(
@@ -113,7 +115,7 @@ func RenderConnectionTable(
 
 	m := connectionTableModel{
 		table:      t,
-		departures: connections, // Store the departures
+		departures: connections,
 	}
 
 	if _, err := tea.NewProgram(m).Run(); err != nil {
