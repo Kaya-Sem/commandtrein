@@ -22,7 +22,7 @@ type timetableTableModel struct {
 func (m timetableTableModel) Init() tea.Cmd { return nil }
 
 func getDetailedDepartureInfo(d api.TimetableDeparture) string {
-	relativeTime := CalculateHumanRelativeTime(d.Time)
+	relativeTime := CalculateHumanRelativeTime(d)
 	return fmt.Sprintf(`
 Departure in: %s
 Track: %s
@@ -47,7 +47,7 @@ func (m *timetableTableModel) updateSelectedDetails() {
 		// Update the selected details including the relative time
 		m.selectedDetails = getDetailedDepartureInfo(selectedDeparture)
 	} else {
-		m.selectedDetails = "No row selected" // Should never really happen
+		m.selectedDetails = "Nothing found!"
 	}
 }
 
@@ -77,6 +77,7 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, teaCmd
 }
 
+// TODO: export to consts
 var detailsBoxStyle = lipgloss.NewStyle().Padding(1)
 
 func (m timetableTableModel) View() string {

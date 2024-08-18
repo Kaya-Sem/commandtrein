@@ -23,12 +23,13 @@ func (m connectionTableModel) Init() tea.Cmd { return nil }
 
 func getDetailedConnectionInfo(c api.Connection) string {
 	return fmt.Sprintf(`
-Detailed info:
+Departure in %s
 Destination: %s
 Track: %s
 Departure Time: %s
 Vehicle: %s
 `,
+		CalculateHumanRelativeTime(c),
 		c.Departure.Station,
 		c.Departure.Platform,
 		cmd.UnixToHHMM(c.Departure.Time),
@@ -44,7 +45,7 @@ func (m *connectionTableModel) updateSelectedDetails() {
 
 		m.selectedDetails = getDetailedConnectionInfo(selectedConnection)
 	} else {
-		m.selectedDetails = "No row selected" // Should never really happen
+		m.selectedDetails = "Nothing found!"
 	}
 }
 

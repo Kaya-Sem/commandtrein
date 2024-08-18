@@ -5,6 +5,8 @@ import (
 	"fmt"
 	"io"
 	"net/http"
+	"os"
+	"strconv"
 )
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
@@ -41,7 +43,23 @@ func ParseConnections(body []byte) ([]Connection, error) {
 	return result.Connection, nil
 }
 
-// Struct definitions remain the same.
+func (c Connection) GetDelayInSeconds() int {
+	delay, err := strconv.Atoi(c.Departure.Delay)
+
+	if err != nil {
+		fmt.Printf("Error converting delay: %s", c.Departure.Time)
+		os.Exit(1)
+	}
+	return delay
+}
+
+func (c Connection) GetUnixDepartureTime() int {
+	depTime, err := strconv.Atoi(c.Departure.Time)
+	if err != nil {
+		fmt.Println("Error converting departuretime: %s", c.Departure.Time)
+	}
+	return depTime
+}
 
 type ConnectionResult struct {
 	Connection []Connection `json:"connection"`

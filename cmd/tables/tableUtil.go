@@ -2,22 +2,30 @@ package table
 
 import (
 	"fmt"
-	"github.com/charmbracelet/lipgloss"
 	"time"
+
+	"github.com/charmbracelet/lipgloss"
 )
 
+const ()
+
 const (
-	BorderColor        = "240" // gray
-	SelectedForeground = "15"  // white
-	SelectedBackground = "97"  // mauve
+	Gray               = "240"
+	White              = "15"
+	Mauve              = "97"
+	BorderColor        = Gray
+	SelectedForeground = White
+	SelectedBackground = Mauve
 	tableHeight        = 10
 )
 
 var (
-	lowOccupancyStyle     = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("2"))   // green
-	mediumOccupancyStyle  = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("214")) // orange
-	highOccupancyStyle    = lipgloss.NewStyle().Italic(true).Foreground(lipgloss.Color("9"))   // red
-	unknownOccupancyStyle = lipgloss.NewStyle().Italic(true).Faint(true).Italic(true)
+	baseOccupancyStyle = lipgloss.NewStyle().Italic(true)
+
+	lowOccupancyStyle     = baseOccupancyStyle.Copy().Foreground(lipgloss.Color("2"))   // green
+	mediumOccupancyStyle  = baseOccupancyStyle.Copy().Foreground(lipgloss.Color("214")) // orange
+	highOccupancyStyle    = baseOccupancyStyle.Copy().Foreground(lipgloss.Color("9"))   // red
+	unknownOccupancyStyle = baseOccupancyStyle.Copy().Faint(true)
 )
 
 func styleOccupancy(s string) string {
@@ -33,25 +41,21 @@ func styleOccupancy(s string) string {
 	}
 }
 
-// CalculateHumanRelativeTime used for calucating human-readable "from now" time. E.g 'in 20 minutes'
-func CalculateHumanRelativeTime(departureTime string) string {
+type timeable interface {
+	GetUnixDepartureTime() int
+	GetDelayInSeconds() int
+}
+
+// TODO: add delay onto the time
+
+func CalculateHumanRelativeTime(t timeable) string {
 	now := time.Now()
 
-	depTime, err := time.Parse("15:04", departureTime)
-	if err != nil {
-		return ""
-	}
+	depTime := time.Unix(int64(t.GetUnixDepartureTime()), 0)
+	depTime = depTime.Add(time.Duration(t.GetDelayInSeconds()) * time.Second)
 
-	// Combine the parsed time with today's date
-	depDateTime := time.Date(now.Year(), now.Month(), now.Day(), depTime.Hour(), depTime.Minute(), 0, 0, now.Location())
-
-	// If the departure time is earlier than now, assume it's for the next day
-	if depDateTime.Before(now) {
-		depDateTime = depDateTime.Add(24 * time.Hour)
-	}
-
-	// Calculate the duration between now and the departure time
-	duration := depDateTime.Sub(now)
+	// Calculate the duration between now and the adjusted departure time
+	duration := depTime.Sub(now)
 
 	// Handle special cases
 	if duration < 1*time.Minute {

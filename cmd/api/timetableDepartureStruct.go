@@ -1,5 +1,27 @@
 package api
 
+import (
+	"fmt"
+	"strconv"
+)
+
+func (d TimetableDeparture) GetUnixDepartureTime() int {
+	time, err := strconv.Atoi(d.Time)
+	if err != nil {
+		fmt.Println("Error converting departure time: %s", d.Time)
+	}
+
+	return time
+}
+
+func (d TimetableDeparture) GetDelayInSeconds() int {
+	delay, err := strconv.Atoi(d.Delay)
+	if err != nil {
+		fmt.Println("Error converting delay: %s", d.Delay)
+	}
+	return delay
+}
+
 type StationTimetableResponse struct {
 	Version     string      `json:"version"`
 	Timestamp   string      `json:"timestamp"`
