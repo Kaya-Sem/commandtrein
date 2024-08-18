@@ -73,7 +73,7 @@ func handleConnection(stationFrom string, stationTo string) {
 }
 
 func handleSearch() {
-	stationsJSON := api.GetSNCBStationsJSON()
+	stationsJSON, err := api.GetSNCBStationsJSON()
 	stations, err := api.ParseStations(stationsJSON)
 	if err != nil {
 		panic(err)
