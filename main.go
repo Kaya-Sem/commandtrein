@@ -68,7 +68,7 @@ func handleConnection(stationFrom string, stationTo string) {
 	}
 
 	s.Stop()
-	table.RenderConnectionTable(columns, rows, connections)
+	table.RenderTable(columns, rows, connections)
 
 }
 
@@ -124,5 +124,5 @@ func handleTimetable(stationName string) {
 
 	s.Stop()
 
-	table.RenderTimetableTable(columns, rows, departures)
+	table.RenderTable(columns, rows, departures)
 }
