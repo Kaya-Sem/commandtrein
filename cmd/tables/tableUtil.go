@@ -46,8 +46,6 @@ type timeable interface {
 	GetDelayInSeconds() int
 }
 
-// TODO: add delay onto the time
-
 func CalculateHumanRelativeTime(t timeable) string {
 	now := time.Now()
 
