@@ -42,7 +42,6 @@ func (m *connectionTableModel) updateSelectedDetails() {
 		selectedIndex := m.table.Cursor()
 		selectedConnection := m.departures[selectedIndex]
 
-		// Update the selected details including the relative time
 		m.selectedDetails = getDetailedConnectionInfo(selectedConnection)
 	} else {
 		m.selectedDetails = "No row selected" // Should never really happen
@@ -76,7 +75,6 @@ func (m connectionTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 
 func (m connectionTableModel) View() string {
 	if m.showMessage {
-		// dump detailed info instead
 		return m.message
 	}
 	tableView := m.table.View()

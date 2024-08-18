@@ -77,8 +77,7 @@ func (m timetableTableModel) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, teaCmd
 }
 
-// TODO: add rounded corners for Bram?
-var detailsBoxStyle = lipgloss.NewStyle().Padding(1) //.Border(lipgloss.NormalBorder())
+var detailsBoxStyle = lipgloss.NewStyle().Padding(1)
 
 func (m timetableTableModel) View() string {
 	if m.showMessage {
