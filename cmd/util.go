@@ -3,16 +3,8 @@ package cmd
 import (
 	"fmt"
 	"strconv"
-	"strings"
 	"time"
 )
-
-// TODO: needed for flag parsing
-func normalizeTime(time string) string {
-	time = strings.ReplaceAll(time, " ", "")
-	time = strings.ReplaceAll(time, ":", "")
-	return time
-}
 
 func UnixToHHMM(unixTime string) string {
 	unixTimeInt, err := strconv.ParseInt(unixTime, 10, 64)

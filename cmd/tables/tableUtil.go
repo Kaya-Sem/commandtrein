@@ -10,7 +10,10 @@ import (
 const (
 	Gray               = "240"
 	White              = "15"
+	Green              = "2"
+	Orange             = "214"
 	Mauve              = "97"
+	Red                = "9"
 	BorderColor        = Gray
 	SelectedForeground = White
 	SelectedBackground = Mauve
@@ -20,12 +23,12 @@ const (
 var DetailsBoxStyle = lipgloss.NewStyle().Padding(1)
 
 var (
-	baseOccupancyStyle = lipgloss.NewStyle().Italic(true)
+	OccupancyStyle = lipgloss.NewStyle().Italic(true)
 
-	lowOccupancyStyle     = baseOccupancyStyle.Copy().Foreground(lipgloss.Color("2"))   // green
-	mediumOccupancyStyle  = baseOccupancyStyle.Copy().Foreground(lipgloss.Color("214")) // orange
-	highOccupancyStyle    = baseOccupancyStyle.Copy().Foreground(lipgloss.Color("9"))   // red
-	unknownOccupancyStyle = baseOccupancyStyle.Copy().Faint(true)
+	lowOccupancyStyle     = OccupancyStyle.Copy().Foreground(lipgloss.Color(Green))
+	mediumOccupancyStyle  = OccupancyStyle.Copy().Foreground(lipgloss.Color(Orange))
+	highOccupancyStyle    = OccupancyStyle.Copy().Foreground(lipgloss.Color(Red))
+	unknownOccupancyStyle = OccupancyStyle.Copy().Faint(true)
 )
 
 func styleOccupancy(s string) string {

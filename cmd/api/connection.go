@@ -10,7 +10,7 @@ import (
 )
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
-func GetConnections(stationFrom string, stationTo string, time string, arrdep string) ([]byte, error) {
+func GetConnections(stationFrom string, stationTo string) ([]byte, error) {
 	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&timesel=departure&format=json&lang=en&typeOfTransport=automatic&alerts=false&results=6", stationFrom, stationTo)
 
 	resp, err := http.Get(url)
@@ -46,7 +46,7 @@ func ParseConnections(body []byte) ([]Connection, error) {
 func GetDurationInMinutes(c Connection) string {
 	duration, err := strconv.Atoi(c.Duration)
 	if err != nil {
-		fmt.Printf("Duration could not be parsed: %s", duration)
+		fmt.Printf("Duration could not be parsed: %d", duration)
 	}
 
 	duration /= 60
@@ -67,7 +67,7 @@ func (c Connection) GetDelayInSeconds() int {
 func (c Connection) GetUnixDepartureTime() int {
 	depTime, err := strconv.Atoi(c.Departure.Time)
 	if err != nil {
-		fmt.Println("Error converting departuretime: %s", c.Departure.Time)
+		fmt.Printf("Error converting departuretime: %s\n", c.Departure.Time)
 	}
 	return depTime
 }

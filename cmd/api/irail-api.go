@@ -28,7 +28,7 @@ func makeAPIRequest(url string) ([]byte, error) {
 }
 
 // GetSNCBStationTimeTable fetches the timetable for a specific station
-func GetSNCBStationTimeTable(stationName string, time string, arrdep string) ([]byte, error) {
+func GetSNCBStationTimeTable(stationName string) ([]byte, error) {
 	url := fmt.Sprintf("https://api.irail.be/liveboard/?station=%s&lang=nl&format=json", stationName)
 	return makeAPIRequest(url)
 }

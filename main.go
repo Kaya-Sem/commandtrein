@@ -31,7 +31,7 @@ func handleConnection(stationFrom string, stationTo string) {
 	s := cmd.NewSpinner(" ", " fetching connections...", 1*time.Second)
 	s.Start()
 
-	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, "", "")
+	connectionsJSON, err := api.GetConnections(stationFrom, stationTo)
 	if err != nil {
 		panic(err)
 	}
@@ -42,10 +42,10 @@ func handleConnection(stationFrom string, stationTo string) {
 	}
 
 	columns := []teaTable.Column{
-		{Title: "Departure", Width: 7},
+		{Title: "Dep", Width: 7},
 		{Title: "", Width: 4},
 		{Title: " ⏲", Width: 7},
-		{Title: "Arrival", Width: 7},
+		{Title: "Arr", Width: 7},
 		{Title: "Track", Width: 10},
 	}
 
@@ -88,7 +88,7 @@ func handleTimetable(stationName string) {
 	s := cmd.NewSpinner(" ", " fetching timetable...", 1*time.Second)
 	s.Start()
 
-	timetableJSON, err := api.GetSNCBStationTimeTable(stationName, "", "departure")
+	timetableJSON, err := api.GetSNCBStationTimeTable(stationName)
 	if err != nil {
 		panic(err)
 	}

@@ -8,7 +8,7 @@ import (
 func (d TimetableDeparture) GetUnixDepartureTime() int {
 	time, err := strconv.Atoi(d.Time)
 	if err != nil {
-		fmt.Println("Error converting departure time: %s", d.Time)
+		fmt.Printf("Error converting departure time: %s\n", d.Time)
 	}
 
 	return time
@@ -17,7 +17,7 @@ func (d TimetableDeparture) GetUnixDepartureTime() int {
 func (d TimetableDeparture) GetDelayInSeconds() int {
 	delay, err := strconv.Atoi(d.Delay)
 	if err != nil {
-		fmt.Println("Error converting delay: %s", d.Delay)
+		fmt.Printf("Error converting delay: %s\n", d.Delay)
 	}
 	return delay
 }
