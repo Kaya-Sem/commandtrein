@@ -8,11 +8,11 @@ import (
 
 func getDetailedConnectionInfo(c api.Connection) string {
 	return fmt.Sprintf(`
-Departure in %s
-Destination: %s
-Track: %s
-Departure Time: %s
-Vehicle: %s
+	Departure in %s
+	Destination: %s
+	Track: %s
+	Departure Time: %s
+	Vehicle: %s
 `,
 		CalculateHumanRelativeTime(c),
 		c.Departure.Station,

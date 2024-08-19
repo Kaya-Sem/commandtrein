@@ -7,8 +7,6 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-const ()
-
 const (
 	Gray               = "240"
 	White              = "15"
@@ -18,6 +16,8 @@ const (
 	SelectedBackground = Mauve
 	tableHeight        = 10
 )
+
+var DetailsBoxStyle = lipgloss.NewStyle().Padding(1)
 
 var (
 	baseOccupancyStyle = lipgloss.NewStyle().Italic(true)

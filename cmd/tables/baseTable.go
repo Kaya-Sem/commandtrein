@@ -10,11 +10,11 @@ import (
 	"github.com/charmbracelet/lipgloss"
 )
 
-type TableData interface {
+type Data interface {
 	api.Connection | api.TimetableDeparture
 }
 
-type TableModel[T TableData] struct {
+type Model[T Data] struct {
 	table           table.Model
 	selectedDetails string
 	showMessage     bool
@@ -22,9 +22,9 @@ type TableModel[T TableData] struct {
 	data            []T
 }
 
-func (m *TableModel[T]) Init() tea.Cmd { return nil }
+func (m *Model[T]) Init() tea.Cmd { return nil }
 
-func (m *TableModel[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
+func (m *Model[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	var teaCmd tea.Cmd
 	switch msg := msg.(type) {
 	case tea.KeyMsg:
@@ -46,16 +46,16 @@ func (m *TableModel[T]) Update(msg tea.Msg) (tea.Model, tea.Cmd) {
 	return m, teaCmd
 }
 
-func (m *TableModel[T]) View() string {
+func (m *Model[T]) View() string {
 	if m.showMessage {
 		return m.message
 	}
 	tableView := m.table.View()
-	detailsView := detailsBoxStyle.Render(m.selectedDetails)
+	detailsView := DetailsBoxStyle.Render(m.selectedDetails)
 	return lipgloss.JoinHorizontal(lipgloss.Top, tableView, detailsView)
 }
 
-func (m *TableModel[T]) updateSelectedDetails() {
+func (m *Model[T]) updateSelectedDetails() {
 	selectedRow := m.table.SelectedRow()
 	if selectedRow != nil {
 		selectedIndex := m.table.Cursor()
@@ -65,7 +65,7 @@ func (m *TableModel[T]) updateSelectedDetails() {
 	}
 }
 
-func (m *TableModel[T]) getDetailedInfo(item T) string {
+func (m *Model[T]) getDetailedInfo(item T) string {
 	switch v := any(item).(type) {
 	case api.Connection:
 		return getDetailedConnectionInfo(v)
@@ -76,7 +76,7 @@ func (m *TableModel[T]) getDetailedInfo(item T) string {
 	}
 }
 
-func RenderTable[T TableData](
+func RenderTable[T Data](
 	columnItems []table.Column,
 	rowItems []table.Row,
 	data []T,
@@ -98,7 +98,7 @@ func RenderTable[T TableData](
 		Foreground(lipgloss.Color(SelectedForeground)).
 		Background(lipgloss.Color(SelectedBackground))
 	t.SetStyles(s)
-	m := &TableModel[T]{
+	m := &Model[T]{
 		table: t,
 		data:  data,
 	}
