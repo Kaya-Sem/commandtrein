@@ -43,6 +43,17 @@ func ParseConnections(body []byte) ([]Connection, error) {
 	return result.Connection, nil
 }
 
+func GetDurationInMinutes(c Connection) string {
+	duration, err := strconv.Atoi(c.Duration)
+	if err != nil {
+		fmt.Printf("Duration could not be parsed: %s", duration)
+	}
+
+	duration /= 60
+
+	return strconv.Itoa(duration) + "m"
+}
+
 func (c Connection) GetDelayInSeconds() int {
 	delay, err := strconv.Atoi(c.Departure.Delay)
 
