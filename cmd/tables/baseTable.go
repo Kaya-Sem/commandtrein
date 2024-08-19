@@ -8,6 +8,7 @@ import (
 	"github.com/charmbracelet/bubbles/table"
 	tea "github.com/charmbracelet/bubbletea"
 	"github.com/charmbracelet/lipgloss"
+	"golang.org/x/term"
 )
 
 type Data interface {
@@ -50,9 +51,31 @@ func (m *Model[T]) View() string {
 	if m.showMessage {
 		return m.message
 	}
+
+	// Width terminal
+	width, _, _ := term.GetSize(int(os.Stdout.Fd()))
+
+	dynamicHeight := len(m.data)
+	if dynamicHeight > 5 {
+		dynamicHeight = 5
+	}
+
+	if lipgloss.Width(m.table.View())+lipgloss.Width(m.selectedDetails) <= width {
+		// Horizontal layout
+		m.table.SetHeight(tableHeight)
+	} else {
+		// Vertical layout
+		m.table.SetHeight(dynamicHeight)
+	}
+
 	tableView := m.table.View()
 	detailsView := DetailsBoxStyle.Render(m.selectedDetails)
-	return lipgloss.JoinHorizontal(lipgloss.Top, tableView, detailsView)
+
+	if lipgloss.Width(tableView)+lipgloss.Width(detailsView) <= width {
+		return lipgloss.JoinHorizontal(lipgloss.Top, tableView, detailsView)
+	} else {
+		return lipgloss.JoinVertical(lipgloss.Left, tableView, detailsView)
+	}
 }
 
 func (m *Model[T]) updateSelectedDetails() {
@@ -65,6 +88,7 @@ func (m *Model[T]) updateSelectedDetails() {
 	}
 }
 
+// TODO: do this with an interface instead
 func (m *Model[T]) getDetailedInfo(item T) string {
 	switch v := any(item).(type) {
 	case api.Connection:
