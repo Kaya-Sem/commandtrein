@@ -85,6 +85,7 @@ type Connection struct {
 	Vias      *Vias               `json:"vias,omitempty"`
 }
 
+// TODO:
 type ConnectionDeparture struct {
 	Station  string `json:"station"`
 	Time     string `json:"time"`  // Unix

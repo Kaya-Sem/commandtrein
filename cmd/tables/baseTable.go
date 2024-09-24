@@ -92,7 +92,7 @@ func (m *Model[T]) updateSelectedDetails() {
 func (m *Model[T]) getDetailedInfo(item T) string {
 	switch v := any(item).(type) {
 	case api.Connection:
-		return getDetailedConnectionInfo(v)
+		return buildDetailView(v)
 	case api.TimetableDeparture:
 		return getDetailedDepartureInfo(v)
 	default:
@@ -113,19 +113,24 @@ func RenderTable[T Data](
 		table.WithHeight(tableHeight),
 	)
 	s := table.DefaultStyles()
+
 	s.Header = s.Header.
 		BorderStyle(lipgloss.NormalBorder()).
 		BorderForeground(lipgloss.Color(BorderColor)).
 		BorderBottom(true).
 		Bold(false)
+
 	s.Selected = s.Selected.
 		Foreground(lipgloss.Color(SelectedForeground)).
 		Background(lipgloss.Color(SelectedBackground))
+
 	t.SetStyles(s)
+
 	m := &Model[T]{
 		table: t,
 		data:  data,
 	}
+
 	if _, err := tea.NewProgram(m).Run(); err != nil {
 		fmt.Println("Error running program:", err)
 		os.Exit(1)

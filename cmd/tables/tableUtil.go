@@ -12,11 +12,10 @@ const (
 	White              = "15"
 	Green              = "2"
 	Orange             = "214"
-	Mauve              = "97"
 	Red                = "9"
 	BorderColor        = Gray
 	SelectedForeground = White
-	SelectedBackground = Mauve
+	SelectedBackground = "#006ab3" // SNCB blue
 	tableHeight        = 10
 )
 
