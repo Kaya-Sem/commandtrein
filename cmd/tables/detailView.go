@@ -7,17 +7,18 @@ import (
 
 func buildDetailView(conn api.Connection) string {
 	yellow := "\033[33m"
-	//blue := "\033[34m"
-	reset := "\033[0m" // Reset color
+	italic := "\033[3m" // ANSI escape code for italic
+	red := "\033[31m"   // ANSI escape code for red
+	reset := "\033[0m"  // Reset color
 
 	// Start building the output string
 	output := "\n"
 	output += " " + cmd.UnixToHHMM(conn.Departure.Time) + "  " + yellow + "S" + reset + " " + conn.Departure.Station + "\n"
-	output += " " + cmd.FormatDelay(conn.Departure.Delay) + yellow + "    \u2502" + reset + " " + conn.Departure.VehicleInfo.ShortName + "\n"
-	output += yellow + "        \u2502 " + reset + "\n"
-	output += yellow + "        \u2502 " + reset + "\n"
+	output += " " + wred + cmd.FormatDelay(conn.Departure.Delay) + reset + yellow + "    ┃" + reset + " " + italic + conn.Departure.VehicleInfo.ShortName + reset + "\n"
+	output += yellow + "        ┃ " + reset + "\n"
+	output += yellow + "        ┃ " + reset + "\n"
 
-	// // Add the stops
+	// Uncomment and modify the following code to add stops
 	// for i, stop := range conn.Vias.Via {
 	// 	if i == len(conn.Vias.Via)-1 { // Last stop gets blue color
 	// 		output += yellow + "      \u2502 " + reset + "\n"
