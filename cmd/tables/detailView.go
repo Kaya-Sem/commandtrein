@@ -11,23 +11,24 @@ func buildDetailView(conn api.Connection) string {
 	red := "\033[31m"   // ANSI escape code for red
 	reset := "\033[0m"  // ANSI Reset color
 
+	// FIX: better color formatting
 	// Start building the output string
 	output := "\n"
-	output += " " + cmd.UnixToHHMM(conn.Departure.Time) + "  " + yellow + "S" + reset + " " + conn.Departure.Station + "\n"
-	output += " " + red + cmd.FormatDelay(conn.Departure.Delay) + reset + yellow + "    ┃" + reset + " " + italic + conn.Departure.VehicleInfo.ShortName + reset + "\n"
+	output += " " + cmd.UnixToHHMM(conn.Departure.Time) + "  " + yellow + "┏━" + reset + " " + conn.Departure.Station + "\n"
+	output += " " + red + cmd.FormatDelay(conn.Departure.Delay) + reset + yellow + "    ┃" + reset + "  " + italic + conn.Departure.VehicleInfo.ShortName + reset + "\n"
 	output += yellow + "        ┃ " + reset + "\n"
 	output += yellow + "        ┃ " + reset + "\n"
 
-	// Uncomment and modify the following code to add stops
-	// for i, stop := range conn.Vias.Via {
-	// 	if i == len(conn.Vias.Via)-1 { // Last stop gets blue color
-	// 		output += yellow + "      \u2502 " + reset + "\n"
-	// 		output += blue + "      ○ " + reset + stop.Station + "\n"
-	// 	} else {
-	// 		output += yellow + "      \u2502 " + reset + "\n"
-	// 		output += yellow + "      ○ " + reset + stop.Station + "\n"
-	// 	}
-	// }
+	for _, stop := range conn.Vias.Via {
+		output += " " + cmd.UnixToHHMM(conn.Arrival.Time) + yellow + "  ┗━ " + reset + stop.Arrival.Station + ", platform " + stop.Arrival.Platform + "\n"
+		output += "        ┊ " + "\n"
+		output += " " + cmd.UnixToHHMM(stop.Departure.Time) + yellow + "  ┏━ " + reset + stop.Departure.Station + ", platform " + stop.Departure.Platform + "\n"
+		output += yellow + "        ┃ " + reset + "\n"
+		output += yellow + "        ┃ " + reset + "\n"
+		output += yellow + "        ┃ " + reset + "\n"
+	}
 
+	output += " " + cmd.UnixToHHMM(conn.Arrival.Time) + yellow + "  ┗━ " + reset + conn.Arrival.Station + "\n"
+	output += "\n"
 	return output
 }

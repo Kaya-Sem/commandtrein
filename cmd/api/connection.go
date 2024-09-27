@@ -11,7 +11,7 @@ import (
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
 func GetConnections(stationFrom string, stationTo string) ([]byte, error) {
-	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&timesel=departure&format=json&lang=en&typeOfTransport=automatic&alerts=false&results=6", stationFrom, stationTo)
+	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&timesel=departure&format=json&lang=nl&typeOfTransport=automatic&alerts=false&results=6", stationFrom, stationTo)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -26,7 +26,7 @@ func GetConnections(stationFrom string, stationTo string) ([]byte, error) {
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {
-		return nil, err
+		fmt.Println(fmt.Errorf("couldn't read response body: %v", err))
 	}
 
 	return body, nil
@@ -82,7 +82,7 @@ type Connection struct {
 	Arrival   ConnectionArrival   `json:"arrival"`
 	Duration  string              `json:"duration"`
 	Number    string              `json:"number"`
-	Vias      *Vias               `json:"vias,omitempty"`
+	Vias      Vias                `json:"vias,omitempty"` // waarom de * ?
 }
 
 // TODO:
@@ -98,7 +98,7 @@ type ConnectionDeparture struct {
 	//Stops    []Stop `json:"stops"`
 	VehicleInfo VehicleInfo `json:"vehicleinfo"`
 	//	StationInfo  StationInfo  `json:"stationinfo"`
-	//PlatformInfo PlatformInfo `json:"platforminfo"`
+	//  PlatformInfo PlatformInfo `json:"platforminfo"`
 }
 
 type ConnectionArrival struct {
@@ -124,10 +124,10 @@ type Vias struct {
 }
 
 type ViaInfo struct {
-	ID          string              `json:"id"`
-	Station     string              `json:"station"`
-	TimeBetween string              `json:"timeBetween"`
-	Vehicle     string              `json:"vehicle"`
-	Departure   ConnectionDeparture `json:"departure"`
-	Arrival     ConnectionArrival   `json:"arrival"`
+	ID        string              `json:"id"`
+	Arrival   ConnectionArrival   `json:"arrival"`
+	Departure ConnectionDeparture `json:"departure"`
+	// Station     string              `json:"station"`
+	TimeBetween string `json:"timeBetween"`
+	//Vehicle     string              `json:"vehicle"`
 }
