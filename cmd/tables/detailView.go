@@ -9,12 +9,12 @@ func buildDetailView(conn api.Connection) string {
 	yellow := "\033[33m"
 	italic := "\033[3m" // ANSI escape code for italic
 	red := "\033[31m"   // ANSI escape code for red
-	reset := "\033[0m"  // Reset color
+	reset := "\033[0m"  // ANSI Reset color
 
 	// Start building the output string
 	output := "\n"
 	output += " " + cmd.UnixToHHMM(conn.Departure.Time) + "  " + yellow + "S" + reset + " " + conn.Departure.Station + "\n"
-	output += " " + wred + cmd.FormatDelay(conn.Departure.Delay) + reset + yellow + "    ┃" + reset + " " + italic + conn.Departure.VehicleInfo.ShortName + reset + "\n"
+	output += " " + red + cmd.FormatDelay(conn.Departure.Delay) + reset + yellow + "    ┃" + reset + " " + italic + conn.Departure.VehicleInfo.ShortName + reset + "\n"
 	output += yellow + "        ┃ " + reset + "\n"
 	output += yellow + "        ┃ " + reset + "\n"
 
