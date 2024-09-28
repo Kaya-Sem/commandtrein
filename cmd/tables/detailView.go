@@ -1,34 +1,65 @@
 package table
 
 import (
+	"strings"
+
 	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
 )
 
-func buildDetailView(conn api.Connection) string {
-	yellow := "\033[33m"
-	italic := "\033[3m" // ANSI escape code for italic
-	red := "\033[31m"   // ANSI escape code for red
-	reset := "\033[0m"  // ANSI Reset color
+const (
+	yellowCode = "\033[33m"
+	redCode    = "\033[31m"
+	italicCode = "\033[3m"
+	resetCode  = "\033[0m"
+)
 
-	// FIX: better color formatting
-	// Start building the output string
-	output := "\n"
-	output += " " + cmd.UnixToHHMM(conn.Departure.Time) + "  " + yellow + "┏━" + reset + " " + conn.Departure.Station + "\n"
-	output += " " + red + cmd.FormatDelay(conn.Departure.Delay) + reset + yellow + "    ┃" + reset + "  " + italic + conn.Departure.VehicleInfo.ShortName + reset + "\n"
-	output += yellow + "        ┃ " + reset + "\n"
-	output += yellow + "        ┃ " + reset + "\n"
+func yellow(text string) string {
+	return yellowCode + text + resetCode
+}
+
+func red(text string) string {
+	return redCode + text + resetCode
+}
+
+func italic(text string) string {
+	return italicCode + text + resetCode
+}
+
+func addVerticalBar(s string, repetitions int) string {
+	verticalBar := yellow("        ┃\n")
+	return s + strings.Repeat(verticalBar, repetitions)
+}
+
+func addVia(text string, v api.ViaInfo) string {
+	text += " " + cmd.UnixToHHMM(v.Arrival.Time) + yellow("  ┗━ ") + v.Arrival.Station + ", platform " + v.Arrival.Platform + "\n"
+	text += "        ┊ " + "\n"
+	text += " " + cmd.UnixToHHMM(v.Departure.Time) + yellow("  ┏━ ") + v.Departure.Station + ", platform " + v.Departure.Platform + "\n"
+	text = addVerticalBar(text, 3)
+
+	return text
+}
+
+func addArrivalStation(a api.ConnectionArrival) string {
+	return " " + cmd.UnixToHHMM(a.Time) + yellow("  ┗━ ") + a.Station + "\n"
+}
+
+func addDepartureStation(d api.ConnectionDeparture) string {
+	hi := " " + cmd.UnixToHHMM(d.Time) + yellow("  ┏━ ") + d.Station + "\n"
+	hi += " " + red(cmd.FormatDelay(d.Delay)) + yellow("    ┃  ") + italic(d.VehicleInfo.ShortName) + "\n"
+	return hi
+}
+
+func buildDetailView(conn api.Connection) string {
+	output := ""
+	output += addDepartureStation(conn.Departure)
+	output = addVerticalBar(output, 2)
 
 	for _, stop := range conn.Vias.Via {
-		output += " " + cmd.UnixToHHMM(conn.Arrival.Time) + yellow + "  ┗━ " + reset + stop.Arrival.Station + ", platform " + stop.Arrival.Platform + "\n"
-		output += "        ┊ " + "\n"
-		output += " " + cmd.UnixToHHMM(stop.Departure.Time) + yellow + "  ┏━ " + reset + stop.Departure.Station + ", platform " + stop.Departure.Platform + "\n"
-		output += yellow + "        ┃ " + reset + "\n"
-		output += yellow + "        ┃ " + reset + "\n"
-		output += yellow + "        ┃ " + reset + "\n"
+		output = addVia(output, stop)
 	}
 
-	output += " " + cmd.UnixToHHMM(conn.Arrival.Time) + yellow + "  ┗━ " + reset + conn.Arrival.Station + "\n"
+	output += addArrivalStation(conn.Arrival)
 	output += "\n"
 	return output
 }
