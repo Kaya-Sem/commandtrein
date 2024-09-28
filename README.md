@@ -23,9 +23,13 @@ To quickly install commandtrein using go, run the following command:
 go install github.com/Kaya-Sem/commandtrein@latest
 ```
 
-This will download and install commandtrein and make it avaible in your `$GOPATH/bin` directory. Ensure that this directory is included in your system's `PATH` environment variable.
+This will download and install commandtrein and make it available in your `$GOPATH/bin` directory. Ensure that this directory is included in your system's `PATH` environment variable.
 
-#### 2. Install from source
+#### 2. Compiled binaries
+
+[releases](https://github.com/Kaya-Sem/commandtrein/releases) (windows is untested)
+
+#### 3. Install from source
 If you prefer to build commandtrein from source, follow these steps:
 
 ```bash
