@@ -76,4 +76,4 @@ To filter results, you will have to use tools like grep. Filtering is planned in
 
 #### Acknowledgements
 
-Commandtrein leverages the iRails API, an open-source API for accessing real-time data from SNCB. We extend our thanks to the iRails team for their excellent service.
+Commandtrein leverages the iRails API, an open-source API for accessing real-time data from SNCB.
