@@ -100,10 +100,9 @@ func handleTimetable(stationName string) {
 	}
 
 	columns := []teaTable.Column{
-		{Title: "", Width: 5},
-		{Title: "", Width: 5},
-		{Title: "Destination", Width: 20},
-		{Title: "Track", Width: 10},
+		{Title: "", Width: 8},
+		{Title: "Track", Width: 5},
+		{Title: "Destination", Width: 28},
 	}
 
 	rows := make([]teaTable.Row, len(departures))
@@ -115,11 +114,11 @@ func handleTimetable(stationName string) {
 		} else {
 			delay = cmd.FormatDelay(departure.Delay)
 		}
+
 		rows[i] = teaTable.Row{
-			cmd.UnixToHHMM(departure.Time),
-			delay,
+			cmd.UnixToHHMM(departure.Time) + " " + delay,
+			table.LeftPad(departure.Platform, 5),
 			departure.Station,
-			departure.Platform,
 		}
 	}
 
