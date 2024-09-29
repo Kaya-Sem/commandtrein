@@ -11,12 +11,17 @@ const (
 	yellowCode        = "\033[33m"
 	redCode           = "\033[31m"
 	italicCode        = "\033[3m"
+	dimCode           = "\033[2m"
 	resetCode         = "\033[0m"
 	verticalBar       = "┃"
 	bottomCorner      = "┗━"
 	topCorner         = "┏━"
 	trackSwitchDotted = "┊"
 )
+
+func dim(text string) string {
+	return fmt.Sprintf("%s%s%s", dimCode, text, resetCode)
+}
 
 func yellow(text string) string {
 	return fmt.Sprintf("%s%s%s", yellowCode, text, resetCode)
@@ -65,22 +70,23 @@ func leftPad(s string, padWidth int) string {
 	return s
 }
 
-func addDepartureStation(d api.ConnectionDeparture) string {
-	delay := cmd.FormatDelay(d.Delay)
+func addDepartureStation(c api.Connection) string {
+	delay := cmd.FormatDelay(c.Departure.Delay)
 	paddedDelay := leftPad(red(delay), 11) // Padding delay to a total width of 7
 
-	return fmt.Sprintf(" %s  %s %s\n    %s  %s  %s\n",
-		cmd.UnixToHHMM(d.Time),
+	return fmt.Sprintf(" %s  %s %s \n    %s  %s  %s\n",
+		cmd.UnixToHHMM(c.Departure.Time),
 		yellow(topCorner),
-		d.Station,
+		c.Departure.Station,
 		paddedDelay,
 		yellow(verticalBar),
-		italic(d.VehicleInfo.ShortName))
+		dim(italic("departure in "+CalculateHumanRelativeTime(c))),
+	)
 }
 
 func buildDetailView(conn api.Connection) string {
-	output := addDepartureStation(conn.Departure)
-	output = addVerticalBar(output, 2)
+	output := addDepartureStation(conn)
+	output = addVerticalBar(output, 3)
 
 	for _, stop := range conn.Vias.Via {
 		output = addVia(output, stop)
