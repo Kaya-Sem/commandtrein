@@ -6,6 +6,12 @@ Commandtrein is a command-line interface (CLI) tool designed to access and displ
 
 See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 
+## Roadmap
+- **Stylistic Improvements:** I appreciate any stylistic advice to enhance the user experience and code quality.
+- **Upcoming Features:**
+  - Filtering station results directly within the CLI.
+  - shell completion for stations
+
 ## Features
 - Timetables: retrieve and display the current timetable for any SNCB station.
 - Routes: Get detailed connections and travel times between two SNCB stations.
@@ -23,9 +29,13 @@ To quickly install commandtrein using go, run the following command:
 go install github.com/Kaya-Sem/commandtrein@latest
 ```
 
-This will download and install commandtrein and make it avaible in your `$GOPATH/bin` directory. Ensure that this directory is included in your system's `PATH` environment variable.
+This will download and install commandtrein and make it available in your `$GOPATH/bin` directory. Ensure that this directory is included in your system's `PATH` environment variable.
 
-#### 2. Install from source
+#### 2. Compiled binaries
+
+[releases](https://github.com/Kaya-Sem/commandtrein/releases) (windows is untested)
+
+#### 3. Install from source
 If you prefer to build commandtrein from source, follow these steps:
 
 ```bash
@@ -72,4 +82,4 @@ To filter results, you will have to use tools like grep. Filtering is planned in
 
 #### Acknowledgements
 
-Commandtrein leverages the iRails API, an open-source API for accessing real-time data from SNCB. We extend our thanks to the iRails team for their excellent service.
+Commandtrein leverages the iRails API, an open-source API for accessing real-time data from SNCB.
