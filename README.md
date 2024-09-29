@@ -6,6 +6,12 @@ Commandtrein is a command-line interface (CLI) tool designed to access and displ
 
 See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 
+## Roadmap
+- **Stylistic Improvements:** I appreciate any stylistic advice to enhance the user experience and code quality.
+- **Upcoming Features:**
+  - Filtering station results directly within the CLI.
+  - shell completion for stations
+
 ## Features
 - Timetables: retrieve and display the current timetable for any SNCB station.
 - Routes: Get detailed connections and travel times between two SNCB stations.
