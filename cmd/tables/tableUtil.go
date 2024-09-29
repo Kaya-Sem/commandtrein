@@ -48,6 +48,14 @@ type timeable interface {
 	GetDelayInSeconds() int
 }
 
+// CalculateHumanRelativeTime returns a human-readable time difference between
+// the current time and a given timeable event, such as a train departure.
+//
+// Parameters:
+//   - t (timeable): an object with methods GetUnixDepartureTime() and GetDelayInSeconds().
+// Returns:
+//   - string: the formatted time difference.
+
 func CalculateHumanRelativeTime(t timeable) string {
 	now := time.Now()
 
