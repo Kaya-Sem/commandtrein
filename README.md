@@ -11,8 +11,7 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 - Timetables: retrieve and display the current timetable for any SNCB station.
 - Routes: Get detailed connections and travel times between two SNCB stations.
 
-![image](https://github.com/user-attachments/assets/8044a27b-be72-4081-a79a-fff0a0037ecd)
-
+![commandtrein](https://github.com/user-attachments/assets/f4343bf1-d8e4-4151-a2d3-4e4289307ad3)
 
 # Documentation
 
