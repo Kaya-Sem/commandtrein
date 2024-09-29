@@ -2,11 +2,12 @@ package main
 
 import (
 	"fmt"
+	"os"
+	"time"
+
 	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	table "github.com/Kaya-Sem/commandtrein/cmd/tables"
-	"os"
-	"time"
 
 	teaTable "github.com/charmbracelet/bubbles/table"
 )
@@ -55,7 +56,7 @@ func handleConnection(stationFrom string, stationTo string) {
 		departureTimeWithDelay := cmd.UnixToHHMM(conn.Departure.Time)
 		delay := cmd.FormatDelay(conn.Departure.Delay)
 		if delay != "" {
-			departureTimeWithDelay += delay // Append delay to the time
+			departureTimeWithDelay += " " + delay // Append delay to the time
 		}
 
 		// Populate the row
@@ -80,7 +81,7 @@ func handleSearch() {
 	}
 
 	for _, station := range stations {
-		fmt.Printf("%s %s\n", station.ID, station.Name)
+		fmt.Printf("%s\n", station.Name)
 	}
 }
 
