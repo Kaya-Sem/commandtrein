@@ -80,6 +80,24 @@ commandtrein search
 To filter results, you will have to use tools like grep. Filtering is planned in upcoming releases
 
 
+#### Tab completion
+Tab completion is currently only implemented for bash. 
+
+<details>
+<summary>Bash</summary>
+  
+To get tab completion for bash, download the file located here in `completions/bash_completion.sh`, and source it in your .bashrc:
+```sh
+source /PATH/TO/bash_completion.sh
+```
+> ⚠️
+> The script currently assumes that your executable is called `commandtrein`.
+> You can either rename your binary, or change the bash-file at line 14 and 19.
+
+The completion uses the `mkdir`, `mapfile`, `grep` and `complete` commands, which should all be installed by default on your system.
+The completions are sourced from the `commandtrein search` command, and are cached in "$HOME/.config/commandtrein/" to prevent having to query for the data (~160ms) every time. Caches are updated once a month, but you can update it forcefully by removing all the cache-files: `rm "$HOME/.config/commandtrein/*"`
+</details>
+
 #### Acknowledgements
 
 Commandtrein leverages the iRails API, an open-source API for accessing real-time data from SNCB.
