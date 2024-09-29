@@ -2,6 +2,7 @@ package table
 
 import (
 	"fmt"
+	"strings"
 	"time"
 
 	"github.com/charmbracelet/lipgloss"
@@ -16,7 +17,7 @@ const (
 	BorderColor        = Gray
 	SelectedForeground = White
 	SelectedBackground = "#006ab3" // SNCB blue
-	tableHeight        = 10
+	tableHeight        = 15
 )
 
 var DetailsBoxStyle = lipgloss.NewStyle().Padding(1)
@@ -85,4 +86,22 @@ func CalculateHumanRelativeTime(t timeable) string {
 	}
 
 	return fmt.Sprintf("%d hours %d min", hours, minutes)
+}
+
+func LeftPad(s string, padWidth int) string {
+	padding := padWidth - len(s)
+	if padding > 0 {
+		return strings.Repeat(" ", padding) + s
+	}
+
+	return s
+}
+
+func RightPad(s string, padWidth int) string {
+	padding := padWidth - len(s)
+	if padding > 0 {
+		return s + strings.Repeat(" ", padding)
+	}
+
+	return s
 }
