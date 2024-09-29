@@ -3,8 +3,9 @@ package table
 import (
 	"fmt"
 	"github.com/Kaya-Sem/commandtrein/cmd"
-	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	"strings"
+
+	"github.com/Kaya-Sem/commandtrein/cmd/api"
 )
 
 const (
@@ -61,18 +62,9 @@ func addArrivalStation(a api.ConnectionArrival) string {
 		a.Station)
 }
 
-func leftPad(s string, padWidth int) string {
-	padding := padWidth - len(s)
-	if padding > 0 {
-		return s + strings.Repeat(" ", padding)
-	}
-
-	return s
-}
-
 func addDepartureStation(c api.Connection) string {
 	delay := cmd.FormatDelay(c.Departure.Delay)
-	paddedDelay := leftPad(red(delay), 11) // Padding delay to a total width of 7
+	paddedDelay := RightPad(red(delay), 11) // Padding delay to a total width of 7
 
 	return fmt.Sprintf(" %s  %s %s \n    %s  %s  %s\n",
 		cmd.UnixToHHMM(c.Departure.Time),

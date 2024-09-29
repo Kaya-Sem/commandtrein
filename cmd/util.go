@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -44,4 +45,13 @@ func FormatDelay(seconds string) string {
 
 func ShiftArgs(args []string) []string {
 	return args[1:]
+}
+
+func leftPad(s string, padWidth int) string {
+	padding := padWidth - len(s)
+	if padding > 0 {
+		return s + strings.Repeat(" ", padding)
+	}
+
+	return s
 }
