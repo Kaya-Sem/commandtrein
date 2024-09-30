@@ -6,10 +6,10 @@
 
 _commandtrein(){
   # Use a cache that will update every week
-	file="$HOME/.config/commandtrein/$(date +'%m-%Y').txt"
+	file="$HOME/.cache/commandtrein/$(date +'%m-%Y').txt"
 
 	if ! [ -f "$file" ]; then 
-		mkdir -p "$HOME/.config/commandtrein/"
+		mkdir -p "$HOME/.cache/commandtrein/"
     # Assumes that the binary is called commandtrein
 		commandtrein search > "$file"
 	fi
