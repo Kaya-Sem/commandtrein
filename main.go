@@ -12,6 +12,8 @@ import (
 	teaTable "github.com/charmbracelet/bubbles/table"
 )
 
+const Version = "1.1.0"
+
 func main() {
 	// TODO: allow flags for time and arrdep
 	args := cmd.ShiftArgs(os.Args)
@@ -19,17 +21,19 @@ func main() {
 	if len(args) == 1 {
 		if args[0] == "search" {
 			handleSearch()
+		} else if args[0] == "version" {
+			handleVersion()
 		} else {
 			handleTimetable(args[0])
 		}
 
-	} else if len(args) == 3 {
-		handleConnection(args[0], args[2])
+	} else if len(args) == 2 {
+		handleConnection(args[0], args[1])
 	}
 }
 
 func handleConnection(stationFrom string, stationTo string) {
-	s := cmd.NewSpinner("", " fetching connections...", 1*time.Second)
+	s := cmd.NewSpinner("", " fetching connections", 1*time.Second)
 	s.Start()
 
 	connectionsJSON, err := api.GetConnections(stationFrom, stationTo)
@@ -125,4 +129,8 @@ func handleTimetable(stationName string) {
 	s.Stop()
 
 	table.RenderTable(columns, rows, departures)
+}
+
+func handleVersion() {
+	fmt.Printf("commandtrein %s\n", Version)
 }
