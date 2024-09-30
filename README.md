@@ -21,6 +21,9 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 
 [Shell completion](https://github.com/Kaya-Sem/commandtrein/wiki/Shell-Tab-Completion)
 
+## Changelog
+
+[changelog.md](https://github.com/Kaya-Sem/commandtrein/blob/main/CHANGELOG.md)
 
 ## Roadmap
 - **Stylistic Improvements:** I appreciate any stylistic advice to enhance the user experience and code quality.
