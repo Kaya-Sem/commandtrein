@@ -28,6 +28,12 @@ jobs:
           GOOS=darwin GOARCH=amd64 go build -o dist/commandtrein-macos
           GOOS=windows GOARCH=amd64 go build -o dist/commandtrein-windows
 
+    - name: Extract Version from main.go
+      id: get_version
+      run: |
+        VERSION=$(grep -oP '(?<=Version = ")[^"]*' main.go)
+        echo "VERSION=$VERSION" >> $GITHUB_ENV
+
     - name: Get Latest Commit Info
       id: commit_info
       run: |
@@ -38,8 +44,8 @@ jobs:
       id: create_release
       uses: actions/create-release@v1
       with:
-        tag_name: ${{ env.COMMIT_SHA }}
-        release_name: Release ${{ env.COMMIT_SHA }}
+        tag_name: ${{ env.VERSION }}
+        release_name: Release ${{ env.VERSION }}
         draft: false
         prerelease: false
       env:
