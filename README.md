@@ -26,6 +26,7 @@ See also: [commandlijn](https://github.com/Command-Transport/commandlijn)
 - **Stylistic Improvements:** I appreciate any stylistic advice to enhance the user experience and code quality.
 - **Upcoming Features:**
   - Filtering station results directly within the CLI.
+  - Flags for departure time and date
 
 
 #### Acknowledgements
