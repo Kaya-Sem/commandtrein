@@ -12,7 +12,11 @@ _commandtrein(){
 	if ! [ -f "$file" ]; then 
 		mkdir -p "${cache_dir}"
 		# Remove older caches
-		rm "${cache_dir}/*.txt" 2>/dev/null
+		find "${cache_dir}" \
+			-maxdepth 1 \
+			-type f \
+			-name "[0-9][0-9]-2[0-9][0-9][0-9].txt" \
+			-delete
 		# Assumes that the binary is called commandtrein
 		commandtrein search > "$file"
 	fi
