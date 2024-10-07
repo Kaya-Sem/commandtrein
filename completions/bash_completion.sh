@@ -5,12 +5,19 @@
 # $3 = word before word being completed
 
 _commandtrein(){
-  # Use a cache that will update every week
-	file="$HOME/.cache/commandtrein/$(date +'%m-%Y').txt"
+	# Use a cache that will update every week
+	cache_dir="${XDG_CACHE_DIR:-$HOME/.cache}/commandtrein"
+	file="${cache_dir}/$(date +'%m-%Y').txt"
 
 	if ! [ -f "$file" ]; then 
-		mkdir -p "$HOME/.cache/commandtrein/"
-    # Assumes that the binary is called commandtrein
+		mkdir -p "${cache_dir}"
+		# Remove older caches
+		find "${cache_dir}" \
+			-maxdepth 1 \
+			-type f \
+			-name "[0-9][0-9]-2[0-9][0-9][0-9].txt" \
+			-delete
+		# Assumes that the binary is called commandtrein
 		commandtrein search > "$file"
 	fi
 	mapfile -t COMPREPLY < <(grep "$2" "$file")
