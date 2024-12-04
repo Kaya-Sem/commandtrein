@@ -1,6 +1,6 @@
 module github.com/Kaya-Sem/commandtrein
 
-go 1.22
+go 1.23.0
 
 require (
 	github.com/charmbracelet/bubbles v0.18.0
@@ -9,8 +9,12 @@ require (
 )
 
 require (
+	github.com/Kaya-Sem/isomer v0.0.0-20241001192912-bf605d99368d // indirect
 	github.com/fatih/color v1.7.0 // indirect
+	github.com/inconshreveable/mousetrap v1.1.0 // indirect
 	github.com/mattn/go-colorable v0.1.2 // indirect
+	github.com/spf13/cobra v1.8.1 // indirect
+	github.com/spf13/pflag v1.0.5 // indirect
 )
 
 require (

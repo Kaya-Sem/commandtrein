@@ -8,27 +8,74 @@ import (
 	"github.com/Kaya-Sem/commandtrein/cmd"
 	"github.com/Kaya-Sem/commandtrein/cmd/api"
 	table "github.com/Kaya-Sem/commandtrein/cmd/tables"
-
 	teaTable "github.com/charmbracelet/bubbles/table"
+	"github.com/spf13/cobra"
 )
 
 const Version = "1.1.0"
 
 func main() {
-	// TODO: allow flags for time and arrdep
-	args := cmd.ShiftArgs(os.Args)
+	var rootCmd = &cobra.Command{
+		Use:   "commandtrein [from] [to]",
+		Short: "Command line tool for train schedules and connections",
+		Long: `Commandtrein allows you to search for train stations, 
+find connections between stations, and view timetables for specific stations.`,
+		Args: cobra.MaximumNArgs(2), // Allow up to 2 positional arguments
+		Run: func(cmd *cobra.Command, args []string) {
+			switch len(args) {
+			case 2:
+				// Default to "connection" behavior when two arguments are provided
+				handleConnection(args[0], args[1])
+			default:
+				// Show help if no valid default operation can be performed
+				fmt.Println("Error: Two arguments required for default behavior (from and to).")
+				_ = cmd.Help()
+			}
+		},
+	}
 
-	if len(args) == 1 {
-		if args[0] == "search" {
+	// Add other commands to the root command
+	rootCmd.AddCommand(
+		newSearchCommand(),
+		newTimetableCommand(),
+		newVersionCommand(),
+	)
+
+	// Execute the root command
+	if err := rootCmd.Execute(); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+
+func newSearchCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "search",
+		Short: "Search for train stations",
+		Run: func(cmd *cobra.Command, args []string) {
 			handleSearch()
-		} else if args[0] == "version" {
-			handleVersion()
-		} else {
-			handleTimetable(args[0])
-		}
+		},
+	}
+}
 
-	} else if len(args) == 2 {
-		handleConnection(args[0], args[1])
+func newTimetableCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "timetable [station]",
+		Short: "Show a timetable for a station",
+		Args:  cobra.ExactArgs(1),
+		Run: func(cmd *cobra.Command, args []string) {
+			handleTimetable(args[0])
+		},
+	}
+}
+
+func newVersionCommand() *cobra.Command {
+	return &cobra.Command{
+		Use:   "version",
+		Short: "Show the version of commandtrein",
+		Run: func(cmd *cobra.Command, args []string) {
+			handleVersion()
+		},
 	}
 }
 
@@ -56,14 +103,12 @@ func handleConnection(stationFrom string, stationTo string) {
 	rows := make([]teaTable.Row, len(connections))
 
 	for i, conn := range connections {
-		// Append the formatted delay to the departure time
 		departureTimeWithDelay := cmd.UnixToHHMM(conn.Departure.Time)
 		delay := cmd.FormatDelay(conn.Departure.Delay)
 		if delay != "" {
-			departureTimeWithDelay += " " + delay // Append delay to the time
+			departureTimeWithDelay += " " + delay
 		}
 
-		// Populate the row
 		rows[i] = teaTable.Row{
 			departureTimeWithDelay,
 			api.GetDurationInMinutes(conn),
@@ -74,7 +119,6 @@ func handleConnection(stationFrom string, stationTo string) {
 
 	s.Stop()
 	table.RenderTable(columns, rows, connections)
-
 }
 
 func handleSearch() {
