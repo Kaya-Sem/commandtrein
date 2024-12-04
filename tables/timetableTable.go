@@ -1,7 +1,7 @@
 package table
 
 import (
-	"github.com/Kaya-Sem/commandtrein/cmd/api"
+	"github.com/Kaya-Sem/commandtrein/api"
 )
 
 func getDetailedDepartureInfo(d api.TimetableDeparture) string {

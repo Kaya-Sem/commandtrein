@@ -2,10 +2,11 @@ package table
 
 import (
 	"fmt"
-	"github.com/Kaya-Sem/commandtrein/cmd"
 	"strings"
 
-	"github.com/Kaya-Sem/commandtrein/cmd/api"
+	"github.com/Kaya-Sem/commandtrein/internal/util"
+
+	"github.com/Kaya-Sem/commandtrein/api"
 )
 
 const (
@@ -42,13 +43,13 @@ func addVerticalBar(s string, repetitions int) string {
 
 func addVia(text string, v api.ViaInfo) string {
 	text += fmt.Sprintf(" %s  %s %s, platform %s\n",
-		cmd.UnixToHHMM(v.Arrival.Time),
+		util.UnixToHHMM(v.Arrival.Time),
 		yellow(bottomCorner),
 		v.Arrival.Station,
 		v.Arrival.Platform)
 	text += fmt.Sprintf("        %s\n", trackSwitchDotted)
 	text += fmt.Sprintf(" %s  %s %s, platform %s\n",
-		cmd.UnixToHHMM(v.Departure.Time),
+		util.UnixToHHMM(v.Departure.Time),
 		yellow(topCorner),
 		v.Departure.Station,
 		v.Departure.Platform)
@@ -57,17 +58,17 @@ func addVia(text string, v api.ViaInfo) string {
 
 func addArrivalStation(a api.ConnectionArrival) string {
 	return fmt.Sprintf(" %s  %s %s\n",
-		cmd.UnixToHHMM(a.Time),
+		util.UnixToHHMM(a.Time),
 		yellow(bottomCorner),
 		a.Station)
 }
 
 func addDepartureStation(c api.Connection) string {
-	delay := cmd.FormatDelay(c.Departure.Delay)
+	delay := util.FormatDelay(c.Departure.Delay)
 	paddedDelay := RightPad(red(delay), 11) // Padding delay to a total width of 7
 
 	return fmt.Sprintf(" %s  %s %s \n    %s  %s  %s\n",
-		cmd.UnixToHHMM(c.Departure.Time),
+		util.UnixToHHMM(c.Departure.Time),
 		yellow(topCorner),
 		c.Departure.Station,
 		paddedDelay,

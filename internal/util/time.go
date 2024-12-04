@@ -1,4 +1,4 @@
-package cmd
+package util
 
 import (
 	"fmt"
@@ -24,12 +24,10 @@ func FormatDelay(seconds string) string {
 
 	minutes /= 60
 
-	// Return an empty string if there is no delay
 	if minutes == 0 {
 		return ""
 	}
 
-	// If the delay is 60 minutes or more, convert to hours and minutes
 	if minutes >= 60 {
 		hours := minutes / 60
 		remainingMinutes := minutes % 60
@@ -40,8 +38,4 @@ func FormatDelay(seconds string) string {
 	}
 
 	return "+" + strconv.Itoa(minutes)
-}
-
-func ShiftArgs(args []string) []string {
-	return args[1:]
 }

@@ -2,8 +2,9 @@ package table
 
 import (
 	"fmt"
-	"github.com/Kaya-Sem/commandtrein/cmd"
-	"github.com/Kaya-Sem/commandtrein/cmd/api"
+
+	"github.com/Kaya-Sem/commandtrein/api"
+	"github.com/Kaya-Sem/commandtrein/internal/util"
 )
 
 func getDetailedConnectionInfo(c api.Connection) string {
@@ -17,7 +18,7 @@ func getDetailedConnectionInfo(c api.Connection) string {
 		CalculateHumanRelativeTime(c),
 		c.Departure.Station,
 		c.Departure.Platform,
-		cmd.UnixToHHMM(c.Departure.Time),
+		util.UnixToHHMM(c.Departure.Time),
 		c.Departure.Vehicle,
 	)
 }
