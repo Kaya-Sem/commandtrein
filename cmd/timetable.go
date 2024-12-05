@@ -8,6 +8,7 @@ import (
 	"github.com/Kaya-Sem/commandtrein/internal/util"
 	table "github.com/Kaya-Sem/commandtrein/tables"
 	teaTable "github.com/charmbracelet/bubbles/table"
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
@@ -18,7 +19,7 @@ func init() {
 func NewTimetableCommand() *cobra.Command {
 	return &cobra.Command{
 		Use:   "timetable [station]",
-		Short: "Show a timetable for a station",
+		Short: "Show the timetable for a station",
 		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			handleTimetable(args[0])
@@ -27,7 +28,9 @@ func NewTimetableCommand() *cobra.Command {
 }
 
 func handleTimetable(stationName string) {
-	s := NewSpinner("", " fetching timetable...", 1*time.Second)
+
+	style := lipgloss.NewStyle().Bold(true)
+	s := NewSpinner("", " fetching timetable for "+style.Render(stationName), 1*time.Second)
 	s.Start()
 
 	timetableJSON, err := api.GetSNCBStationTimeTable(stationName)
