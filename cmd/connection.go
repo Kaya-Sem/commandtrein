@@ -25,7 +25,7 @@ func handleConnection(stationFrom string, stationTo string) {
 
 	columns := []teaTable.Column{
 		{Title: "Vertrek", Width: 9},
-		{Title: "Duur", Width: 7},
+		{Title: "Reistijd", Width: 14},
 		{Title: "Aankomst", Width: 8},
 		{Title: "Spoor", Width: 10},
 	}
@@ -41,7 +41,7 @@ func handleConnection(stationFrom string, stationTo string) {
 
 		rows[i] = teaTable.Row{
 			departureTimeWithDelay,
-			api.GetDurationInMinutes(conn),
+			util.GetDurationInMinutes(conn),
 			util.UnixToHHMM(conn.Arrival.Time),
 			conn.Departure.Platform,
 		}

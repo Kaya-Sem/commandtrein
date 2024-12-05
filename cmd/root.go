@@ -35,8 +35,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 				if !found {
 
 					style := lipgloss.NewStyle().Foreground(lipgloss.Color("9")).Bold(true)
-					fmt.Printf("\n%s\n\n", style.Render("No such command or shortcut found"))
-					cmd.Help()
+					fmt.Printf("\n%s\n", style.Render("No such command or shortcut found"))
 				}
 			}
 			os.Exit(1)

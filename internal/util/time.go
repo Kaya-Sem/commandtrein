@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"strconv"
 	"time"
+
+	"github.com/Kaya-Sem/commandtrein/api"
 )
 
 func UnixToHHMM(unixTime string) string {
@@ -38,4 +40,20 @@ func FormatDelay(seconds string) string {
 	}
 
 	return "+" + strconv.Itoa(minutes)
+}
+
+func GetDurationInMinutes(c api.Connection) string {
+	duration, err := strconv.Atoi(c.Duration)
+	if err != nil {
+		fmt.Printf("Duration could not be parsed: %s\n", c.Duration)
+		return "0m"
+	}
+
+	hours := duration / 3600          // Bereken het aantal uren
+	minutes := (duration % 3600) / 60 // Bereken de resterende minuten
+
+	if hours > 0 {
+		return fmt.Sprintf("%du%dm", hours, minutes)
+	}
+	return fmt.Sprintf("%dm", minutes)
 }
