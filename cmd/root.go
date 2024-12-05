@@ -27,7 +27,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 				for _, c := range cmd.Root().Commands() {
 					if c.Name() == args[0] {
 						found = true
-						fmt.Printf("Please use: commandtrein %s --help for more information\n", args[0])
+						fmt.Printf("Please use: commandtrein %s --help for more information\n\n", args[0])
 						break
 					}
 				}

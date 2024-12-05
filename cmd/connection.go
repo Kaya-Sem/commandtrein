@@ -24,9 +24,9 @@ func handleConnection(stationFrom string, stationTo string) {
 	}
 
 	columns := []teaTable.Column{
-		{Title: "D", Width: 9},
+		{Title: "Vertrek", Width: 9},
 		{Title: "Duur", Width: 7},
-		{Title: "A", Width: 7},
+		{Title: "Aankomst", Width: 7},
 		{Title: "Spoor", Width: 10},
 	}
 

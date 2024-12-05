@@ -3,6 +3,7 @@ package cmd
 import (
 	"fmt"
 
+	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
 )
 
@@ -35,7 +36,8 @@ func shortcutCmd() *cobra.Command {
 			Run: func(cmd *cobra.Command, args []string) {
 				fmt.Println("Configured shortcuts:")
 				for name, shortcut := range config.Shortcuts {
-					fmt.Printf("  %s: %s → %s\n", name, shortcut.Station1, shortcut.Station2)
+					style := lipgloss.NewStyle().Italic(true)
+					fmt.Printf("  %s: %s → %s\n", style.Render(name), shortcut.Station1, shortcut.Station2)
 				}
 			},
 		},

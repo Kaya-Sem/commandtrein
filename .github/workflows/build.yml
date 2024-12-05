@@ -31,7 +31,7 @@ jobs:
     - name: Extract Version from main.go
       id: get_version
       run: |
-        VERSION=$(grep -oP '(?<=Version = ")[^"]*' main.go)
+        VERSION=$(grep -oP '(?<=Version = ")[^"]*' cmd/version.go)
         echo "VERSION=$VERSION" >> $GITHUB_ENV
 
     - name: Get Latest Commit Info
