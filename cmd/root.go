@@ -13,11 +13,9 @@ import (
 )
 
 var rootCmd = &cobra.Command{
-	Use:   "hugo",
-	Short: "Hugo is a very fast static site generator",
-	Long: `A Fast and Flexible Static Site Generator built with
-                love by spf13 and friends in Go.
-                Complete documentation is available at https://gohugo.io/documentation/`,
+	Use:   "commandtrein [shortcut|station1] [station2]",
+	Short: "commandtrein helps you find train connections in Belgium",
+	Long:  ``,
 	Run: func(cmd *cobra.Command, args []string) {
 		// Do Stuff Here
 	},
@@ -32,10 +30,6 @@ func Execute() {
 		fmt.Fprintln(os.Stderr, err)
 		os.Exit(1)
 	}
-}
-
-func initConfig() {
-	fmt.Println("placeholder")
 }
 
 func handleConnection(stationFrom string, stationTo string) {
