@@ -19,6 +19,7 @@ _commandtrein() {
 			-delete
 		# Assumes that the binary is called commandtrein
 		commandtrein search >"$file"
+		commandtrein shortcut list -s >>"$file"
 		echo "shortcut" >>"$file"
 	fi
 
