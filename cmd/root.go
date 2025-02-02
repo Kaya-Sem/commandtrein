@@ -14,6 +14,7 @@ var (
 	arrival_query   bool   = false
 	time_query      string = ""
 	isDeparture     bool
+	Simple          bool
 )
 
 var rootCmd = &cobra.Command{
@@ -21,7 +22,9 @@ var rootCmd = &cobra.Command{
 	Short: "commandtrein helps you find train connections in Belgium",
 	Long: `commandtrein is a CLI tool for checking train schedules and connections in Belgium.
 You can use it with station names directly or configure shortcuts for frequent routes.`,
-	Args: cobra.MaximumNArgs(2),
+
+	TraverseChildren: true,
+	Args:             cobra.MaximumNArgs(2),
 	PreRunE: func(cmd *cobra.Command, args []string) error {
 		// Ensure XOR logic for --departure and --arrival
 		if departure_query && arrival_query {
@@ -69,6 +72,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 func init() {
 	//rootCmd.PersistentFlags().BoolVarP(&departure_query, "departure", "d", false, "Use the departure time")
 	//rootCmd.PersistentFlags().BoolVarP(&arrival_query, "arrival", "a", false, "Use the arrival time")
+	rootCmd.PersistentFlags().BoolVarP(&Simple, "simple", "s", false, "use simple version")
 	rootCmd.PersistentFlags().StringVarP(&time_query, "time", "t", "", "Specify the time in hhmm format")
 }
 

@@ -7,16 +7,15 @@ import (
 	"github.com/spf13/cobra"
 )
 
-var simple bool // Package-level variable
-
 func init() {
 	rootCmd.AddCommand(shortcutCmd())
 }
 
 func shortcutCmd() *cobra.Command {
 	cmd := &cobra.Command{
-		Use:   "shortcut",
-		Short: "Manage connection shortcuts",
+		Use:              "shortcut",
+		Short:            "Manage connection shortcuts",
+		TraverseChildren: true,
 	}
 
 	listCmd := &cobra.Command{
@@ -24,7 +23,7 @@ func shortcutCmd() *cobra.Command {
 		Short: "List all shortcuts",
 		Run: func(cmd *cobra.Command, args []string) {
 			// Ensure we get the flag value properly
-			simple, _ := cmd.Flags().GetBool("simple")
+			simple, _ := cmd.Root().PersistentFlags().GetBool("simple")
 
 			if simple {
 				printShortcutsSimple()
@@ -33,9 +32,6 @@ func shortcutCmd() *cobra.Command {
 			}
 		},
 	}
-
-	// Correctly attach flag to the `list` command
-	listCmd.Flags().BoolVarP(&simple, "simple", "s", false, "Print shortcuts in simple format")
 
 	cmd.AddCommand(
 		&cobra.Command{
