@@ -7,11 +7,33 @@ import (
 	"net/http"
 	"os"
 	"strconv"
+
+	"github.com/Kaya-Sem/commandtrein/internal/util"
 )
 
 // GetConnections fetches the connection data from the API and returns the response body as a byte slice.
-func GetConnections(stationFrom string, stationTo string) ([]byte, error) {
-	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&timesel=departure&format=json&lang=nl&typeOfTransport=automatic&alerts=false&results=6", stationFrom, stationTo)
+func GetConnections(stationFrom string, stationTo string, time string, departure bool) ([]byte, error) {
+
+	var mode string
+	if departure {
+		mode = "departure"
+	} else {
+		mode = "arrival"
+	}
+
+	new_time := ""
+	if time == "" {
+		new_time = util.GetBelgiumTimeHHMM()
+	} else {
+		new_time = time
+	}
+
+	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&time=%s&timesel=%s&format=json&lang=nl&typeOfTransport=automatic&alerts=false&results=10",
+		stationFrom,
+		stationTo,
+		new_time,
+		mode,
+	)
 
 	resp, err := http.Get(url)
 	if err != nil {
@@ -20,9 +42,16 @@ func GetConnections(stationFrom string, stationTo string) ([]byte, error) {
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {
-			fmt.Println(fmt.Errorf("couldn't close response body: %v", err))
+			fmt.Println(fmt.Errorf("time probably not correct: %v", err))
 		}
 	}(resp.Body)
+
+	// Check HTTP response status code
+	if resp.StatusCode == http.StatusInternalServerError {
+		return nil, fmt.Errorf("server error: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	} else if resp.StatusCode != http.StatusOK {
+		return nil, fmt.Errorf("unexpected response status: %d %s", resp.StatusCode, http.StatusText(resp.StatusCode))
+	}
 
 	body, err := io.ReadAll(resp.Body)
 	if err != nil {

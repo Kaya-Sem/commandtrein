@@ -9,11 +9,13 @@ import (
 	teaTable "github.com/charmbracelet/bubbles/table"
 )
 
-func handleConnection(stationFrom string, stationTo string) {
-	s := NewSpinner("", " fetching connections", 1*time.Second)
+func handleConnection(stationFrom string, stationTo string, queryMode string, departure bool) {
+	s := util.NewSpinner("", " fetching connections", 1*time.Second)
 	s.Start()
 
-	connectionsJSON, err := api.GetConnections(stationFrom, stationTo)
+	// TODO: add flags to get time and (departure|arrival)
+	// don't harcode true for departure and arrivale
+	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, queryMode, departure)
 	if err != nil {
 		panic(err)
 	}
@@ -41,7 +43,7 @@ func handleConnection(stationFrom string, stationTo string) {
 
 		rows[i] = teaTable.Row{
 			departureTimeWithDelay,
-			util.GetDurationInMinutes(conn),
+			util.GetDurationInMinutes(conn.Duration),
 			util.UnixToHHMM(conn.Arrival.Time),
 			conn.Departure.Platform,
 		}

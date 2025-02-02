@@ -5,8 +5,10 @@ import (
 	"time"
 
 	"github.com/Kaya-Sem/commandtrein/api"
+
 	"github.com/Kaya-Sem/commandtrein/internal/util"
 	table "github.com/Kaya-Sem/commandtrein/tables"
+
 	teaTable "github.com/charmbracelet/bubbles/table"
 	"github.com/charmbracelet/lipgloss"
 	"github.com/spf13/cobra"
@@ -30,7 +32,7 @@ func NewTimetableCommand() *cobra.Command {
 func handleTimetable(stationName string) {
 
 	style := lipgloss.NewStyle().Bold(true)
-	s := NewSpinner("", " fetching timetable for "+style.Render(stationName), 1*time.Second)
+	s := util.NewSpinner("", " fetching timetable for "+style.Render(stationName), 1*time.Second)
 	s.Start()
 
 	timetableJSON, err := api.GetSNCBStationTimeTable(stationName)

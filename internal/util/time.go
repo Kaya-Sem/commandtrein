@@ -4,8 +4,6 @@ import (
 	"fmt"
 	"strconv"
 	"time"
-
-	"github.com/Kaya-Sem/commandtrein/api"
 )
 
 func UnixToHHMM(unixTime string) string {
@@ -42,10 +40,10 @@ func FormatDelay(seconds string) string {
 	return "+" + strconv.Itoa(minutes)
 }
 
-func GetDurationInMinutes(c api.Connection) string {
-	duration, err := strconv.Atoi(c.Duration)
+func GetDurationInMinutes(c string) string {
+	duration, err := strconv.Atoi(c)
 	if err != nil {
-		fmt.Printf("Duration could not be parsed: %s\n", c.Duration)
+		fmt.Printf("Duration could not be parsed: %s\n", c)
 		return "0m"
 	}
 
@@ -56,4 +54,16 @@ func GetDurationInMinutes(c api.Connection) string {
 		return fmt.Sprintf("%du%dm", hours, minutes)
 	}
 	return fmt.Sprintf("%dm", minutes)
+}
+
+func GetBelgiumTimeHHMM() string {
+	// Load Belgium's timezone (CET/CEST)
+	loc, err := time.LoadLocation("Europe/Brussels")
+	if err != nil {
+		panic(err)
+	}
+
+	belgiumTime := time.Now().In(loc)
+
+	return belgiumTime.Format("1504")
 }
