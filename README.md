@@ -33,17 +33,6 @@ shortcuts:
     station2: "Antwerpen-Centraal"
 ``` 
 
-## Changelog
-
-[changelog.md](https://github.com/Kaya-Sem/commandtrein/blob/main/CHANGELOG.md)
-
-## Roadmap
-- **Stylistic Improvements:** I appreciate any stylistic advice to enhance the user experience and code quality.
-- **Upcoming Features:**
-  - Filtering station results directly within the CLI.
-  - Flags for departure time and date
-
-
 #### Acknowledgements
 
 Commandtrein leverages the iRails API, an open-source API for accessing real-time data from SNCB.
