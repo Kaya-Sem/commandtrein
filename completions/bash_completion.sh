@@ -19,7 +19,7 @@ _commandtrein() {
 			-delete
 		# Assumes that the binary is called commandtrein
 		commandtrein search >"$file"
-		commandtrein shortcut list -s >>"$file"
+		commandtrein shortcut list -s >>"$file" # custom shortcuts
 		echo "shortcut" >>"$file"
 	fi
 
@@ -29,7 +29,7 @@ _commandtrein() {
 		return
 	fi
 
-	mapfile -t COMPREPLY < <(grep "$2" "$file")
+	mapfile -t COMPREPLY < <(grep -i "^$2" "$file")
 }
 
 complete -F _commandtrein commandtrein
