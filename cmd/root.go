@@ -74,6 +74,8 @@ func init() {
 	//rootCmd.PersistentFlags().BoolVarP(&arrival_query, "arrival", "a", false, "Use the arrival time")
 	rootCmd.PersistentFlags().BoolVarP(&Simple, "simple", "s", false, "use simple version")
 	rootCmd.PersistentFlags().StringVarP(&time_query, "time", "t", "", "Specify the time in hhmm format")
+
+	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
 
 func Execute() {
