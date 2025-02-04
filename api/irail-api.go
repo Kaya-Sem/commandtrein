@@ -7,6 +7,8 @@ import (
 	"net/http"
 )
 
+// TODO: check for status codes and generate appropriate response
+
 // makeAPIRequest is a generic function to make HTTP GET requests
 func makeAPIRequest(url string) ([]byte, error) {
 	resp, err := http.Get(url)

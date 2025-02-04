@@ -10,11 +10,11 @@ import (
 )
 
 const (
-	yellowCode        = "\033[33m"
-	redCode           = "\033[31m"
-	italicCode        = "\033[3m"
-	dimCode           = "\033[2m"
-	resetCode         = "\033[0m"
+	YELLOW            = "\033[33m"
+	RED               = "\033[31m"
+	ITALIC            = "\033[3m"
+	DIM               = "\033[2m"
+	RESET             = "\033[0m"
 	verticalBar       = "┃"
 	bottomCorner      = "┗━"
 	topCorner         = "┏━"
@@ -22,19 +22,19 @@ const (
 )
 
 func dim(text string) string {
-	return fmt.Sprintf("%s%s%s", dimCode, text, resetCode)
+	return fmt.Sprintf("%s%s%s", DIM, text, RESET)
 }
 
 func yellow(text string) string {
-	return fmt.Sprintf("%s%s%s", yellowCode, text, resetCode)
+	return fmt.Sprintf("%s%s%s", YELLOW, text, RESET)
 }
 
 func red(text string) string {
-	return fmt.Sprintf("%s%s%s", redCode, text, resetCode)
+	return fmt.Sprintf("%s%s%s", RED, text, RESET)
 }
 
 func italic(text string) string {
-	return fmt.Sprintf("%s%s%s", italicCode, text, resetCode)
+	return fmt.Sprintf("%s%s%s", ITALIC, text, RESET)
 }
 
 func addVerticalBar(s string, repetitions int) string {
@@ -67,19 +67,27 @@ func addDepartureStation(c api.Connection) string {
 	delay := util.FormatDelay(c.Departure.Delay)
 	paddedDelay := RightPad(red(delay), 11) // Padding delay to a total width of 7
 
-	return fmt.Sprintf(" %s  %s %s \n    %s  %s  %s\n",
-		util.UnixToHHMM(c.Departure.Time),
-		yellow(topCorner),
-		c.Departure.Station,
-		paddedDelay,
-		yellow(verticalBar),
-		dim(italic("departure in "+CalculateHumanRelativeTime(c))),
-	)
+	// first line: time, yellow top corner, departure station name
+	header := fmt.Sprintf(" %s  %s %s ", util.UnixToHHMM(c.Departure.Time), yellow(topCorner), c.Departure.Station)
+	header += "\n"
+
+	// second line: delay, vertical bar and relative departure
+	header += fmt.Sprintf("    %s  %s  %s", paddedDelay, yellow(verticalBar), dim(italic("vertrek in "+CalculateHumanRelativeTime(c))))
+
+	header += "\n"
+
+	// third line
+	header += fmt.Sprintf("        %s  %s", yellow(verticalBar), "hi")
+
+	header += "\n"
+
+	return header
+
 }
 
 func buildDetailView(conn api.Connection) string {
 	output := addDepartureStation(conn)
-	output = addVerticalBar(output, 3)
+	output = addVerticalBar(output, 4)
 
 	for _, stop := range conn.Vias.Via {
 		output = addVia(output, stop)

@@ -100,13 +100,13 @@ type Connection struct {
 	Arrival   ConnectionArrival   `json:"arrival"`
 	Duration  string              `json:"duration"`
 	Number    string              `json:"number"`
-	Vias      Vias                `json:"vias,omitempty"` // waarom de * ?
+	Vias      Vias                `json:"vias,omitempty"`
 }
 
-// TODO:
+// TODO: implement commented bits if asked for
 type ConnectionDeparture struct {
 	Station  string `json:"station"`
-	Time     string `json:"time"`  // Unix
+	Time     string `json:"time"`  // Unix since epoch
 	Delay    string `json:"delay"` // seconds
 	Canceled string `json:"canceled"`
 	Left     string `json:"left"`
