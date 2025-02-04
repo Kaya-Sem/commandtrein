@@ -6,6 +6,17 @@ import (
 	"time"
 )
 
+// ConvertEpochStringToDate converts a Unix epoch string to "dd/mm/yy" format
+func ConvertEpochStringToDate(epochStr string) string {
+	epochInt, err := strconv.ParseInt(epochStr, 10, 64)
+	if err != nil {
+		return "could not parse date"
+	}
+
+	t := time.Unix(epochInt, 0)
+	return t.Format("02/01/06")
+}
+
 func UnixToHHMM(unixTime string) string {
 	unixTimeInt, err := strconv.ParseInt(unixTime, 10, 64)
 	if err != nil {

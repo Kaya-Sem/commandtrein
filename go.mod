@@ -1,6 +1,6 @@
 module github.com/Kaya-Sem/commandtrein
 
-go 1.23.0
+go 1.23.4
 
 require (
 	github.com/charmbracelet/bubbles v0.18.0

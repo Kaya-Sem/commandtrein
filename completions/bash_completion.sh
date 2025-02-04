@@ -21,6 +21,7 @@ _commandtrein() {
 		commandtrein search >"$file"
 		commandtrein shortcut list -s >>"$file" # custom shortcuts
 		echo "shortcut" >>"$file"
+		echo "issues" >>"$file"
 	fi
 
 	# Handle subcommand "shortcut"

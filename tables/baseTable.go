@@ -12,7 +12,7 @@ import (
 )
 
 type Data interface {
-	api.Connection | api.TimetableDeparture
+	api.Connection | api.TimetableDeparture | api.Issue
 }
 
 type Model[T Data] struct {
@@ -95,6 +95,8 @@ func (m *Model[T]) getDetailedInfo(item T) string {
 		return buildDetailView(v)
 	case api.TimetableDeparture:
 		return getDetailedDepartureInfo(v)
+	case api.Issue:
+		return getDetailedIssueInfo(v)
 	default:
 		return "Unsupported data type"
 	}

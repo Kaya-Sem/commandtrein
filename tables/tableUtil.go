@@ -22,28 +22,6 @@ const (
 
 var DetailsBoxStyle = lipgloss.NewStyle().Padding(1)
 
-var (
-	OccupancyStyle = lipgloss.NewStyle().Italic(true)
-
-	lowOccupancyStyle     = OccupancyStyle.Copy().Foreground(lipgloss.Color(Green))
-	mediumOccupancyStyle  = OccupancyStyle.Copy().Foreground(lipgloss.Color(Orange))
-	highOccupancyStyle    = OccupancyStyle.Copy().Foreground(lipgloss.Color(Red))
-	unknownOccupancyStyle = OccupancyStyle.Copy().Faint(true)
-)
-
-func styleOccupancy(s string) string {
-	switch s {
-	case "low":
-		return lowOccupancyStyle.Render(s)
-	case "medium":
-		return mediumOccupancyStyle.Render(s)
-	case "high":
-		return highOccupancyStyle.Render(s)
-	default:
-		return unknownOccupancyStyle.Render(s)
-	}
-}
-
 type timeable interface {
 	GetUnixDepartureTime() int
 	GetDelayInSeconds() int
