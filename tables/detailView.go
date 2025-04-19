@@ -77,7 +77,7 @@ func addDepartureStation(c api.Connection) string {
 	header += "\n"
 
 	// third line
-	header += fmt.Sprintf("        %s  %s", yellow(verticalBar), "hi")
+	header += fmt.Sprintf("        %s", yellow(verticalBar))
 
 	header += "\n"
 

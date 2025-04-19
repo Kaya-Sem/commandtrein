@@ -46,7 +46,7 @@ func shortcutCmd() *cobra.Command {
 				fmt.Printf("Added shortcut '%s': %s → %s\n", args[0], args[1], args[2])
 			},
 		},
-		listCmd, // Add the `list` command to `shortcut`
+		listCmd,
 	)
 
 	return cmd

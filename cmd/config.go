@@ -30,26 +30,26 @@ func getConfigPath() string {
 
 func initConfig() {
 	configPath := getConfigPath()
-
-	// Create config directory if it doesn't exist
 	configDir := filepath.Dir(configPath)
 	if err := os.MkdirAll(configDir, 0755); err != nil {
 		fmt.Fprintf(os.Stderr, "Error creating config directory: %v\n", err)
 		os.Exit(1)
 	}
 
-	// Read config file if it exists
 	data, err := os.ReadFile(configPath)
 	if err != nil {
 		if !os.IsNotExist(err) {
 			fmt.Fprintf(os.Stderr, "Error reading config file: %v\n", err)
 			os.Exit(1)
 		}
-		// Create default config if file doesn't exist
-		config = Config{
-			Shortcuts: make(map[string]ShortcutConfig),
-		}
-		saveConfig()
+		// File doesn't exist, create default config
+		createDefaultConfig()
+		return
+	}
+
+	if len(data) == 0 {
+		// File exists but is empty, create default config
+		createDefaultConfig()
 		return
 	}
 
@@ -58,12 +58,26 @@ func initConfig() {
 		fmt.Fprintf(os.Stderr, "Error parsing config file: %v\n", err)
 		os.Exit(1)
 	}
+
+	// shortcuts map nil?, initialize it
+	if config.Shortcuts == nil {
+		config.Shortcuts = make(map[string]ShortcutConfig)
+		saveConfig()
+	}
+}
+
+func createDefaultConfig() {
+	config = Config{
+		Shortcuts: make(map[string]ShortcutConfig),
+	}
+	saveConfig()
 }
 
 func saveConfig() {
 	configPath := getConfigPath()
 	data, err := yaml.Marshal(config)
 	if err != nil {
+
 		fmt.Fprintf(os.Stderr, "Error marshaling config: %v\n", err)
 		os.Exit(1)
 	}
@@ -74,17 +88,16 @@ func saveConfig() {
 	}
 }
 
-// AddShortcut adds or updates a shortcut in the config
 func AddShortcut(name, station1, station2 string) error {
 	config.Shortcuts[name] = ShortcutConfig{
 		Station1: station1,
 		Station2: station2,
 	}
+
 	saveConfig()
 	return nil
 }
 
-// GetShortcut retrieves a shortcut from the config
 func GetShortcut(name string) (ShortcutConfig, bool) {
 	shortcut, exists := config.Shortcuts[name]
 	return shortcut, exists
