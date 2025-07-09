@@ -1,7 +1,6 @@
 package cmd
 
 import (
-	"errors"
 	"fmt"
 	"os"
 
@@ -10,11 +9,9 @@ import (
 )
 
 var (
-	departure_query bool   = true
-	arrival_query   bool   = false
-	time_query      string = ""
-	isDeparture     bool
-	Simple          bool
+	time_query string = ""
+	arrival    bool   = false
+	Simple     bool
 )
 
 var rootCmd = &cobra.Command{
@@ -25,17 +22,6 @@ You can use it with station names directly or configure shortcuts for frequent r
 
 	TraverseChildren: true,
 	Args:             cobra.MaximumNArgs(2),
-	PreRunE: func(cmd *cobra.Command, args []string) error {
-		// Ensure XOR logic for --departure and --arrival
-		if departure_query && arrival_query {
-			return errors.New("only one of --departure (-d) or --arrival (-a) can be used, not both")
-		} else if arrival_query {
-			isDeparture = false
-		} else {
-			isDeparture = true
-		}
-		return nil
-	},
 	Run: func(cmd *cobra.Command, args []string) {
 		switch len(args) {
 		case 0:
@@ -43,9 +29,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 		case 1:
 			// Check if argument is a shortcut
 			if shortcut, exists := GetShortcut(args[0]); exists {
-
-				// FIX: hardcoded true is replacement for the arrival/departure choice. Currently not working with the API
-				handleConnection(shortcut.Station1, shortcut.Station2, time_query, true)
+				handleConnection(shortcut.Station1, shortcut.Station2, time_query, !arrival)
 			} else {
 				// Check if it's a valid subcommand
 				found := false
@@ -63,15 +47,13 @@ You can use it with station names directly or configure shortcuts for frequent r
 			}
 			os.Exit(1)
 		case 2:
-			// FIX:
-			handleConnection(args[0], args[1], time_query, true)
+			handleConnection(args[0], args[1], time_query, !arrival)
 		}
 	},
 }
 
 func init() {
-	//rootCmd.PersistentFlags().BoolVarP(&departure_query, "departure", "d", false, "Use the departure time")
-	//rootCmd.PersistentFlags().BoolVarP(&arrival_query, "arrival", "a", false, "Use the arrival time")
+	rootCmd.PersistentFlags().BoolVarP(&arrival, "arrival", "a", false, "Use arrival time instead of departure time")
 	rootCmd.PersistentFlags().BoolVarP(&Simple, "simple", "s", false, "use simple version")
 	rootCmd.PersistentFlags().StringVarP(&time_query, "time", "t", "", "Specify the time in hhmm format")
 

@@ -11,14 +11,16 @@ import (
 	"github.com/Kaya-Sem/commandtrein/internal/util"
 )
 
-// GetConnections fetches the connection data from the API and returns the response body as a byte slice.
+/*
+GetConnections fetches the connection data from the API and returns the response body as a byte slice.
+
+https://docs.irail.be/#connections
+*/
 func GetConnections(stationFrom string, stationTo string, time string, departure bool) ([]byte, error) {
 
-	var mode string
+	timesel := "arrival"
 	if departure {
-		mode = "departure"
-	} else {
-		mode = "arrival"
+		timesel = "departure"
 	}
 
 	new_time := ""
@@ -32,7 +34,7 @@ func GetConnections(stationFrom string, stationTo string, time string, departure
 		stationFrom,
 		stationTo,
 		new_time,
-		mode,
+		timesel,
 	)
 
 	resp, err := http.Get(url)
