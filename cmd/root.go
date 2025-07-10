@@ -11,7 +11,6 @@ import (
 var (
 	time_query string = ""
 	arrival    bool   = false
-	Simple     bool
 )
 
 var rootCmd = &cobra.Command{
@@ -54,7 +53,6 @@ You can use it with station names directly or configure shortcuts for frequent r
 
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&arrival, "arrival", "a", false, "Use arrival time instead of departure time")
-	rootCmd.PersistentFlags().BoolVarP(&Simple, "simple", "s", false, "use simple version")
 	rootCmd.PersistentFlags().StringVarP(&time_query, "time", "t", "", "Specify the time in hhmm format")
 
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
