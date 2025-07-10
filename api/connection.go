@@ -16,7 +16,7 @@ GetConnections fetches the connection data from the API and returns the response
 
 https://docs.irail.be/#connections
 */
-func GetConnections(stationFrom string, stationTo string, time string, departure bool) ([]byte, error) {
+func GetConnections(stationFrom string, stationTo string, time string, departure bool, date string) ([]byte, error) {
 
 	timesel := "arrival"
 	if departure {
@@ -33,6 +33,10 @@ func GetConnections(stationFrom string, stationTo string, time string, departure
 		time,
 		timesel,
 	)
+
+	if date != "" {
+		url += fmt.Sprintf("&date=%s", date)
+	}
 
 	resp, err := http.Get(url)
 	if err != nil {

@@ -9,6 +9,7 @@ import (
 )
 
 var (
+	date       string = ""
 	time_query string = ""
 	arrival    bool   = false
 )
@@ -28,7 +29,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 		case 1:
 			// Check if argument is a shortcut
 			if shortcut, exists := GetShortcut(args[0]); exists {
-				handleConnection(shortcut.Station1, shortcut.Station2, time_query, !arrival)
+				handleConnection(shortcut.Station1, shortcut.Station2, time_query, !arrival, date)
 			} else {
 				// Check if it's a valid subcommand
 				found := false
@@ -46,7 +47,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 			}
 			os.Exit(1)
 		case 2:
-			handleConnection(args[0], args[1], time_query, !arrival)
+			handleConnection(args[0], args[1], time_query, !arrival, date)
 		}
 	},
 }
@@ -54,6 +55,7 @@ You can use it with station names directly or configure shortcuts for frequent r
 func init() {
 	rootCmd.PersistentFlags().BoolVarP(&arrival, "arrival", "a", false, "Use arrival time instead of departure time")
 	rootCmd.PersistentFlags().StringVarP(&time_query, "time", "t", "", "Specify the time in hhmm format")
+	rootCmd.PersistentFlags().StringVarP(&date, "date", "d", "", "dagen van de week, morgen, overmorgen, of ddmmyy")
 
 	rootCmd.CompletionOptions.HiddenDefaultCmd = true
 }
