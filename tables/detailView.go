@@ -65,14 +65,14 @@ func addArrivalStation(a api.ConnectionArrival) string {
 
 func addDepartureStation(c api.Connection) string {
 	delay := util.FormatDelay(c.Departure.Delay)
-	paddedDelay := RightPad(red(delay), 11) // Padding delay to a total width of 7
+	paddedDelay := RightPad(red(delay), 9) // Padding delay to a total width of 7
 
 	// first line: time, yellow top corner, departure station name
 	header := fmt.Sprintf(" %s  %s %s ", util.UnixToHHMM(c.Departure.Time), yellow(topCorner), c.Departure.Station)
 	header += "\n"
 
 	// second line: delay, vertical bar and relative departure
-	header += fmt.Sprintf("    %s  %s  %s", paddedDelay, yellow(verticalBar), dim(italic("vertrek in "+CalculateHumanRelativeTime(c))))
+	header += fmt.Sprintf("   %s   %s  %s", paddedDelay, yellow(verticalBar), dim(italic("vertrekt "+CalculateHumanRelativeTime(c))))
 
 	header += "\n"
 

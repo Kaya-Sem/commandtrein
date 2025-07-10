@@ -36,7 +36,7 @@ func FormatDelay(seconds string) string {
 	minutes /= 60
 
 	if minutes == 0 {
-		return ""
+		return "  "
 	}
 
 	if minutes >= 60 {

@@ -23,17 +23,14 @@ func GetConnections(stationFrom string, stationTo string, time string, departure
 		timesel = "departure"
 	}
 
-	new_time := ""
 	if time == "" {
-		new_time = util.GetBelgiumTimeHHMM()
-	} else {
-		new_time = time
+		time = util.GetBelgiumTimeHHMM()
 	}
 
 	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&time=%s&timesel=%s&format=json&lang=nl&typeOfTransport=automatic&alerts=false&results=10",
 		stationFrom,
 		stationTo,
-		new_time,
+		time,
 		timesel,
 	)
 
@@ -41,6 +38,7 @@ func GetConnections(stationFrom string, stationTo string, time string, departure
 	if err != nil {
 		return nil, err
 	}
+
 	defer func(Body io.ReadCloser) {
 		err := Body.Close()
 		if err != nil {

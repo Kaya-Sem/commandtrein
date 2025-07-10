@@ -44,26 +44,36 @@ func CalculateHumanRelativeTime(t timeable) string {
 	// Calculate the duration between now and the adjusted departure time
 	duration := depTime.Sub(now)
 
-	// Handle special cases
 	if duration < 1*time.Minute {
-		return "now"
-	} else if duration < 60*time.Minute {
-		return fmt.Sprintf("%d min", int(duration.Minutes()))
-	} else if duration < 120*time.Minute {
+		return "zometeen"
+	}
+
+	if duration < 60*time.Minute {
+		return fmt.Sprintf("over %d minuten", int(duration.Minutes()))
+	}
+
+	// less than 2 hours
+	if duration < 120*time.Minute {
 		minutes := int(duration.Minutes()) % 60
 		if minutes == 0 {
-			return "1 hour"
+			return "over 1u"
 		}
-		return fmt.Sprintf("1 hour %d min", minutes)
+
+		var minuteString = fmt.Sprintf("%d", minutes)
+		if minutes < 10 {
+			minuteString = "0" + minuteString
+		}
+
+		return fmt.Sprintf("over 1u%sm", minuteString)
 	}
 
 	hours := int(duration.Hours())
 	minutes := int(duration.Minutes()) % 60
 	if minutes == 0 {
-		return fmt.Sprintf("%d hours", hours)
+		return fmt.Sprintf("over %du", hours)
 	}
 
-	return fmt.Sprintf("%d hours %d min", hours, minutes)
+	return fmt.Sprintf("over %du%d", hours, minutes)
 }
 
 func LeftPad(s string, padWidth int) string {
