@@ -71,10 +71,11 @@ func GetBelgiumTimeHHMM() string {
 	// Load Belgium's timezone (CET/CEST)
 	loc, err := time.LoadLocation("Europe/Brussels")
 	if err != nil {
-		panic(err)
+		belgiumTime := time.Now()
+		return belgiumTime.Format("1504")
+
 	}
 
 	belgiumTime := time.Now().In(loc)
-
 	return belgiumTime.Format("1504")
 }
