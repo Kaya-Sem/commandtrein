@@ -67,6 +67,15 @@ func CalculateHumanRelativeTime(t timeable) string {
 		return fmt.Sprintf("over 1u%sm", minuteString)
 	}
 
+	// Check if it's over 24 hours
+	if duration >= 24*time.Hour {
+		days := int(duration.Hours()) / 24
+		if days == 1 {
+			return "over 1 dag"
+		}
+		return fmt.Sprintf("over %d dagen", days)
+	}
+
 	hours := int(duration.Hours())
 	minutes := int(duration.Minutes()) % 60
 	if minutes == 0 {
