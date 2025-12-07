@@ -85,7 +85,7 @@ func getNextValidDay(dayName string) string {
 	return fmt.Sprintf("%02d%02d%02d", nextValidDay.Day(), nextValidDay.Month(), nextValidDay.Year()%100)
 }
 
-func handleConnection(stationFrom string, stationTo string, queryMode string, departure bool, date string) {
+func handleConnection(stationFrom string, stationTo string, timeQuery string, departure bool, date string) {
 	s := util.NewSpinner("", " fetching connections", 1*time.Second)
 	s.Start()
 
@@ -100,7 +100,7 @@ func handleConnection(stationFrom string, stationTo string, queryMode string, de
 		}
 	}
 
-	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, queryMode, departure, parsedDate)
+	connectionsJSON, err := api.GetConnections(stationFrom, stationTo, timeQuery, departure, parsedDate)
 	if err != nil {
 		panic(err)
 	}

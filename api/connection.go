@@ -6,6 +6,7 @@ import (
 	"io"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 
 	"github.com/Kaya-Sem/commandtrein/internal/util"
@@ -13,9 +14,21 @@ import (
 
 /*
 GetConnections fetches the connection data from the API and returns the response body as a byte slice.
-
 https://docs.irail.be/#connections
 */
+
+func validateTimeRegex(timeStr string) bool {
+	// Pattern explanation:
+	// ^           - start of string
+	// ([01][0-9]  - 00-19 (first two digits)
+	// |2[0-3])    - OR 20-23 (hours)
+	// [0-5][0-9]  - 00-59 (minutes)
+	// $           - end of string
+	pattern := `^([01][0-9]|2[0-3])[0-5][0-9]$`
+	matched, _ := regexp.MatchString(pattern, timeStr)
+	return matched
+}
+
 func GetConnections(stationFrom string, stationTo string, time string, departure bool, date string) ([]byte, error) {
 
 	timesel := "arrival"
@@ -25,7 +38,13 @@ func GetConnections(stationFrom string, stationTo string, time string, departure
 
 	if time == "" {
 		time = util.GetBelgiumTimeHHMM()
+	} else {
+		if !validateTimeRegex(time) {
+			return nil, fmt.Errorf("Time does not follow hhmm format")
+		}
 	}
+
+	// TODO: do time checking
 
 	url := fmt.Sprintf("https://api.irail.be/connections/?from=%s&to=%s&time=%s&timesel=%s&format=json&lang=nl&typeOfTransport=automatic&alerts=false&results=10",
 		stationFrom,
